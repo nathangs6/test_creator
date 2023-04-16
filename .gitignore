@@ -1,0 +1,13 @@
+# Root ignoring
+testing/
+
+# Client ignoring
+client/.next/
+client/node_modules
+client/package-lock.json
+
+# Server ignoring
+server/node_modules/
+server/package-lock.json
+server/.env
+client/pages/api
