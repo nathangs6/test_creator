@@ -1,0 +1,75 @@
+.modalClose {
+    cursor: pointer;
+    font-weight: 500;
+    height: 3rem;
+    width: 5%;
+    border-radius: 4px;
+    border: none;
+    font-size: 1rem;
+    color: #2c3e50;
+    background: white;
+    transition: all 0.25s ease;
+    position: absolute;
+    right: 0;
+    top: 0;
+    align-self: flex-end;
+}
+
+.modalClose:hover {
+    background: whitesmoke;
+}
+
+.modalConfirm {
+    /* Styling */
+    cursor: pointer;
+    font-weight: 500;
+    padding: 11px 28px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    border: none;
+    color: #fff;
+    background: #98971a;
+    transition: all 0.25s ease;
+}
+
+.modalConfirm:hover {
+    background: #79740e;
+}
+
+.modalDelete {
+    /* Styling */
+    cursor: pointer;
+    font-weight: 500;
+    padding: 11px 28px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    border: none;
+    color: #fff;
+    background: #cc241d;
+    transition: all 0.25s ease;
+}
+
+.modalDelete:hover {
+    background: #9d0006;
+}
+
+.modalCancel {
+    /*margin-top: 10px;*/
+    text-align: center;
+    /* Styling */
+    cursor: pointer;
+    font-weight: 500;
+    padding: 11px 28px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    border: none;
+    color: #2c3e50;
+    background: #fcfcfc;
+    transition: all 0.25s ease;
+}
+
+.modalCancel:hover {
+    box-shadow: none;
+    transform: none;
+    background: whitesmoke;
+}

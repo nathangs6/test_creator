@@ -1,0 +1,161 @@
+.modalBackground {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.centre {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.bigModal {
+    width: 80vw;
+    height: 80vh;
+    z-index: 110;
+    border-radius: 24px;
+    box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.04);
+    background: #fcfcfc;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.smallModal {
+    width: 40vw;
+    height: 30vh;
+    z-index: 110;
+    border-radius: 24px;
+    box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.04);
+    background: #fcfcfc;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.modalHeader {
+    flex: 0 0 auto;
+    width: 100%;
+    height: 3rem;
+    border-radius: 8px 8px 0 0;
+    border-bottom: 2px solid black;
+    background-color: #bababa;
+}
+
+.smallModalHeader {
+    flex: 0 0 auto;
+    width: 100%;
+    height: 2.5rem;
+    border-radius: 8px 8px 0 0;
+    border-bottom: 2px solid black;
+    background-color: #bababa;
+}
+
+.heading {
+    width: 100%;
+    height: 3rem;
+    margin: 0;
+    margin-bottom: auto;
+    padding: 0;
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: 500;
+    color: black;
+}
+
+.smallHeading {
+    width: 100%;
+    height: 1.2rem;
+    margin: 0;
+    padding: 0;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: black;
+}
+
+
+.headerClose {
+    height: 3rem;
+    min-width: 3.5rem;
+    width: 5%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-radius: 0 8px 0 0;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.smallHeaderClose {
+    height: 2.5rem;
+    min-width: 3.5rem;
+    width: 5%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-radius: 0 8px 0 0;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.modalContent {
+    flex-grow: 1;
+    width: 100%;
+    overflow: auto;
+    background-color: #ababab;
+    font-size: 1.5rem;
+}
+
+.smallModalContent {
+    flex-grow: 1;
+    width: 100%;
+    overflow: auto;
+    background-color: #ababab;
+    font-size: 1rem;
+}
+
+.modalFooter {
+    flex: 0 0 auto;
+    height: 3rem;
+    width: 98%;
+    border-radius: 0 0 8px 8px;
+    background-color: #bcbcbc;
+    padding: 0 1%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+}
+
+.largeTextarea {
+    display: block;
+    min-height: 10rem;
+    height: 24vh;
+    width: 95%;
+    margin: 0 auto;
+    resize: none;
+}
+
+.mediumTextarea {
+    display: block;
+    min-height: 4rem;
+    height: 11.5vh;
+    width: 95%;
+    margin: 0 auto;
+    resize: none;
+}
+.smallTextarea {
+    display: block;
+    margin: 0;
+    margin-left: 2.5%;
+}
