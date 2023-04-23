@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'; // might not be needed
-import modalStyles from './modal2.module.css';
+import modalStyles from './modal.module.css';
 import { ModalButton } from '../buttons.js';
 import buttonStyles from '../buttons.module.css';
 

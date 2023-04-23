@@ -1,5 +1,5 @@
 import { BigModal, SmallModal } from './modal.js'
-import modalStyles from './modal2.module.css'
+import modalStyles from './modal.module.css'
 
 function QuestionModal({ setOpen, modalTitle, apiCall, questionData }) {
     return (<BigModal setOpen={setOpen} modalTitle={modalTitle} apiCall={apiCall} action="confirm">
