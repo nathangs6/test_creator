@@ -3,7 +3,7 @@ import { SmallModal } from './modal.js'
 function NewCollectionModal({ setOpen, username }) {
     const modalTitle = "New Collection For " + username;
     const apiCall = {
-        URL: "http://localhost:3001/collectionTemp/new",
+        URL: "http://localhost:3001/api/collection/new/" + username,
         method: "POST"
     };
     return (<SmallModal setOpen={setOpen} modalTitle={modalTitle} apiCall={apiCall} action="confirm">
@@ -19,7 +19,7 @@ function NewCollectionModal({ setOpen, username }) {
 function RenameCollectionModal({ setOpen, collectionData }) {
     const modalTitle = "Rename collection " + collectionData.name;
     const apiCall = {
-        URL: "http://localhost:3001/collectionTemp/rename/" + collectionData.id,
+        URL: "http://localhost:3001/api/collection/rename/" + collectionData.id,
         method: "POST"
     };
     return (<SmallModal setOpen={setOpen} modalTitle={modalTitle} apiCall={apiCall} action="confirm">
@@ -27,7 +27,7 @@ function RenameCollectionModal({ setOpen, collectionData }) {
         <input
             type="text"
             name="newCollectionName"
-            value={collectionData.name}
+            defaultValue={collectionData.name}
             required/><br/>
     </SmallModal>);
 };
@@ -35,18 +35,18 @@ function RenameCollectionModal({ setOpen, collectionData }) {
 function DeleteCollectionModal({ setOpen, collectionData }) {
     const modalTitle = "Delete Collection " + collectionData.name;
     const apiCall = {
-        URL: "http://localhost:3001/api/collectionTemp/delete/" + collectionData.id,
-        method: "DELETE"
+        URL: "http://localhost:3001/api/collection/delete/" + collectionData.id,
+        method: "POST"
     };
     return (<SmallModal setOpen={setOpen} modalTitle={modalTitle} apiCall={apiCall} action="delete">
         Are you sure you want to delete collection {collectionData.name}?
     </SmallModal>);
 };
 
-function NewSubCollectionModal({ setOpen, collectionName }) {
+function NewSubCollectionModal({ setOpen, collectionID, collectionName }) {
     const modalTitle = "New Subcollection For " + collectionName;
     const apiCall = {
-        URL: "http://localhost:3001/subCollectionTemp/new",
+        URL: "http://localhost:3001/api/subcollection/new/" + collectionID,
         method: "POST"
     };
     return (<SmallModal setOpen={setOpen} modalTitle={modalTitle} apiCall={apiCall} action="confirm">
@@ -62,7 +62,7 @@ function NewSubCollectionModal({ setOpen, collectionName }) {
 function RenameSubCollectionModal({ setOpen, subCollectionData }) {
     const modalTitle = "Rename Subcollection " + subCollectionData.name;
     const apiCall = {
-        URL: "http://localhost:3001/subCollectionTemp/rename/" + subCollectionData.id,
+        URL: "http://localhost:3001/api/subcollection/rename/" + subCollectionData.id,
         method: "POST"
     };
     return (<SmallModal setOpen={setOpen} modalTitle={modalTitle} apiCall={apiCall} action="confirm">
@@ -70,7 +70,7 @@ function RenameSubCollectionModal({ setOpen, subCollectionData }) {
         <input
             type="text"
             name="newSubCollectionName"
-            value={subCollectionData.name}
+            defaultValue={subCollectionData.name}
             required/><br/>
     </SmallModal>);
 };
@@ -78,8 +78,8 @@ function RenameSubCollectionModal({ setOpen, subCollectionData }) {
 function DeleteSubCollectionModal({ setOpen, subCollectionData }) {
     const modalTitle = "Delete Subcollection " + subCollectionData.name;
     const apiCall = {
-        URL: "http://localhost:3001/api/subCollectionTemp/delete/" + subCollectionData.id,
-        method: "DELETE"
+        URL: "http://localhost:3001/api/subcollection/delete/" + subCollectionData.id,
+        method: "POST"
     };
     return (<SmallModal setOpen={setOpen} modalTitle={modalTitle} apiCall={apiCall} action="delete">
         Are you sure you want to delete subcollection {subCollectionData.name}?

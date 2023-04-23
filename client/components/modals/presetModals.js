@@ -7,7 +7,7 @@ function PresetModal({ setOpen, modalTitle, apiCall, presetData }) {
         <input
             type="text"
             className={modalStyles.smallTextarea}
-            name="newPresetname"
+            name="newPresetName"
             defaultValue={presetData.name}
             required/>
         <label htmlFor="newPresetPreamble">Preset Preamble: </label><br/>
@@ -42,7 +42,7 @@ function NewPresetModal({ setOpen, username }) {
     };
     const modalTitle = "New Preset For " + username;
     const apiCall = {
-        URL: "http://localhost:3001/api/presetTemp/new",
+        URL: "http://localhost:3001/api/preset/new/" + username,
         method: "POST"
     };
     return <PresetModal 
@@ -55,7 +55,7 @@ function NewPresetModal({ setOpen, username }) {
 
 function EditPresetModal({ setOpen, presetData }) {
     const modalTitle = "Edit Preset " + presetData.name;
-    const apiURL = "http://localhost:3001/api/presetTemp/update/" + presetData.id;
+    const apiURL = "http://localhost:3001/api/preset/update/" + presetData.id;
     const apiCall = {
         URL: apiURL,
         method: "POST"
@@ -71,8 +71,8 @@ function EditPresetModal({ setOpen, presetData }) {
 function DeletePresetModal({ setOpen, presetData }) {
     const modalTitle = "Delete Preset " + presetData.name;
     const apiCall = {
-        URL: "http://localhost:3001/api/presetTemp/delete/" + presetData.id,
-        method: "DELETE"
+        URL: "http://localhost:3001/api/preset/delete/" + presetData.id,
+        method: "POST"
     };
     return (<SmallModal setOpen={setOpen} modalTitle={modalTitle} apiCall={apiCall} action="delete">
         Are you sure you want to delete preset {presetData.name}?

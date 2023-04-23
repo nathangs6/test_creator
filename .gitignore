@@ -1,5 +1,6 @@
 # Root ignoring
 testing/
+todo.txt
 
 # Client ignoring
 client/.next/

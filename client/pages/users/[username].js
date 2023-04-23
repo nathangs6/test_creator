@@ -138,7 +138,7 @@ function CollectionList(username, collections) {
                         {renameCollection(username, id, name)}&nbsp;
                         {deleteCollection(username, id, name)}&nbsp;
                         {newSubCollection(id, name)}
-                        {SubCollectionList(subCollections)}
+                        {SubCollectionList(username, subCollections)}
                     </li>
                 );
             })}
@@ -176,11 +176,11 @@ function newSubCollection(collectionID, collectionName) {
     const [isOpen, setOpen] = useState(false);
     return (<>
         <button type="button" onClick={() => setOpen(true)}>New Subcollection</button>
-        {isOpen && <NewSubCollectionModal setOpen={setOpen} collectionName={collectionName}/>}
+        {isOpen && <NewSubCollectionModal setOpen={setOpen} collectionID={collectionID} collectionName={collectionName}/>}
     </>);
 };
 
-function SubCollectionList(subCollections) {
+function SubCollectionList(username, subCollections) {
     if (Object.keys(subCollections).length === 0) {
         return ;
     };
@@ -197,7 +197,7 @@ function SubCollectionList(subCollections) {
                             style={{width: "3em"}}/> {name}&nbsp;&nbsp;
                         {renameSubCollection(id, name)}&nbsp;&nbsp;
                         {deleteSubCollection(id, name)}&nbsp;&nbsp;
-                        {genNewQuestion(id, name)}&nbsp;&nbsp;
+                        {genNewQuestion(username, id, name)}&nbsp;&nbsp;
                         <button type="button">Show Questions</button>
                         {questionList(id, name, questions)}
                     </li>
@@ -231,12 +231,12 @@ function deleteSubCollection(subCollectionID, subCollectionName) {
     </>);
 };
 
-function genNewQuestion(subCollectionID, subCollectionName) {
+function genNewQuestion(username, subCollectionID, subCollectionName) {
     const [isOpen, setOpen] = useState(false);
 
     return (<>
         <button type="button" onClick={() => setOpen(true)}>New Question</button>
-        {isOpen && <NewQuestionModal setOpen={setOpen} subCollectionName={subCollectionName}/>}
+        {isOpen && <NewQuestionModal setOpen={setOpen} username={username} subCollectionID={subCollectionID} subCollectionName={subCollectionName}/>}
     </>);
 };
 
@@ -276,13 +276,12 @@ function editQuestion(subCollectionName, questionID, questionName, questionConte
 function deleteQuestion(ownerID, questionID, questionName) {
     const [isOpen, setOpen] = useState(false);
     const questionData = {
-        owner: ownerID,
         id: questionID,
         name: questionName
     };
     return (<>
         <button onClick={() => setOpen(true)}>Delete</button>
-        {isOpen && <DeleteQuestionModal setOpen={setOpen} questionData={questionData}/>}
+        {isOpen && <DeleteQuestionModal setOpen={setOpen} subCollectionID={ownerID} questionData={questionData}/>}
     </>);
 };
 
