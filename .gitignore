@@ -1,3 +1,10 @@
+# File ignore
+*.tex
+*.pdf
+*.aux
+*.log
+*.synctex.gz
+
 # Root ignoring
 testing/
 todo.txt
