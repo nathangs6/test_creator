@@ -31,6 +31,16 @@ function PresetModal({ setOpen, modalTitle, apiCall, presetData }) {
     </BigModal>);
 };
 
+const NewPresetSubmit = function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const formData = new FormData(e.target);
+    const body = {};
+    formData.forEach((value, property) => body[property] = value);
+    console.table(body);
+    return false;
+};
+
 function NewPresetModal({ setOpen, username }) {
     const presetData = {
         owner: username,
@@ -42,8 +52,7 @@ function NewPresetModal({ setOpen, username }) {
     };
     const modalTitle = "New Preset For " + username;
     const apiCall = {
-        URL: "http://localhost:3001/api/preset/new/" + username,
-        method: "POST"
+        formSubmit: NewPresetSubmit
     };
     return <PresetModal 
         setOpen={setOpen}
@@ -53,12 +62,20 @@ function NewPresetModal({ setOpen, username }) {
     />
 };
 
+const EditPresetSubmit = function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const formData = new FormData(e.target);
+    const body = {};
+    formData.forEach((value, property) => body[property] = value);
+    console.table(body);
+    return false;
+};
+
 function EditPresetModal({ setOpen, presetData }) {
     const modalTitle = "Edit Preset " + presetData.name;
-    const apiURL = "http://localhost:3001/api/preset/update/" + presetData.id;
     const apiCall = {
-        URL: apiURL,
-        method: "POST"
+        formSubmit: EditPresetSubmit
     };
     return <PresetModal 
         setOpen={setOpen} 
@@ -68,11 +85,20 @@ function EditPresetModal({ setOpen, presetData }) {
     />
 };
 
+const DeletePresetSubmit = function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const formData = new FormData(e.target);
+    const body = {};
+    formData.forEach((value, property) => body[property] = value);
+    console.table(body);
+    return false;
+};
+
 function DeletePresetModal({ setOpen, presetData }) {
     const modalTitle = "Delete Preset " + presetData.name;
     const apiCall = {
-        URL: "http://localhost:3001/api/preset/delete/" + presetData.id,
-        method: "POST"
+        formSubmit: DeletePresetSubmit
     };
     return (<SmallModal setOpen={setOpen} modalTitle={modalTitle} apiCall={apiCall} action="delete">
         Are you sure you want to delete preset {presetData.name}?

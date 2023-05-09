@@ -21,20 +21,19 @@ function UserPage({ collectionData, presetData }) {
         <UserInfo username={username}/>
         <hr/>
         <section>
-            <h2>Generate Practice Test</h2>
-            <h3>Select Preset</h3>
-            {newPreset(username)}
-            <div>
-                {PresetList(presetData, username)}
-            </div>
-            <h3>Select Questions</h3>
-            <div>
-                {newCollection(username)}
-                {CollectionList(username, collectionData)}
-            </div>
-            <form>
-                <input type="submit" value="Generate Practice Test"/>
-            </form>
+            <form id="generate-form" action="http://localhost:3001/api/generate/" method="POST"></form>
+                <h2>Generate Practice Test</h2>
+                <h3>Select Preset</h3>
+                {newPreset(username)}
+                <div>
+                    {PresetList(presetData, username)}
+                </div>
+                <h3>Select Questions</h3>
+                <div>
+                    {newCollection(username)}
+                    {CollectionList(username, collectionData)}
+                </div>
+            <input form="generate-form" type="submit" value="Generate Practice Test"/>
         </section>
     </Layout>);
 }
@@ -77,7 +76,7 @@ function PresetList(presets, username) {
                 {presets.map(({ id, name, preamble, sep, postamble }) => {
                     return (
                         <tr>
-                            <td><input type="radio" name="preset-selection"/></td>
+                            <td><input type="radio" name="presetSelection" value={id} required/></td>
                             <td>{name}</td>
                             <td>{editPreset(username, id, name, preamble, sep, postamble)}</td>
                             <td>{deletePreset(username, id, name)}</td>
@@ -190,9 +189,11 @@ function SubCollectionList(username, subCollections) {
                 return (
                     <li key={id}>
                         <input 
+                            form="generate-form"
                             type="number" 
                             min="0" 
                             defaultValue="0" 
+                            name={"subCollectionCount" + id}
                             step="1" 
                             style={{width: "3em"}}/> {name}&nbsp;&nbsp;
                         {renameSubCollection(id, name)}&nbsp;&nbsp;

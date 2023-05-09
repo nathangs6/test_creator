@@ -25,6 +25,16 @@ function QuestionModal({ setOpen, modalTitle, apiCall, questionData }) {
     </BigModal>);
 };
 
+const NewQuestionSubmit = function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const formData = new FormData(e.target);
+    const body = {};
+    formData.forEach((value, property) => body[property] = value);
+    console.table(body);
+    return false;
+};
+
 function NewQuestionModal({ setOpen, username, subCollectionID, subCollectionName }) {
     const questionData = {
         owner: subCollectionName,
@@ -35,26 +45,43 @@ function NewQuestionModal({ setOpen, username, subCollectionID, subCollectionNam
     };
     const modalTitle = "New Question For " + subCollectionName;
     const apiCall = {
-        URL: "http://localhost:3001/api/question/new/" + username + "?subCollectionID=" + subCollectionID,
-        method: "POST"
+        formSubmit: NewQuestionSubmit
     };
     return <QuestionModal setOpen={setOpen} modalTitle={modalTitle} apiCall={apiCall} questionData={questionData}/>
+};
+
+const EditQuestionSubmit = function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const formData = new FormData(e.target);
+    const body = {};
+    formData.forEach((value, property) => body[property] = value);
+    console.table(body);
+    return false;
 };
 
 function EditQuestionModal({ setOpen, questionData }) {
     const modalTitle = "Edit Preset " + questionData.name;
     const apiCall = {
-        URL: "http://localhost:3001/api/question/update/" + questionData.id,
-        method: "POST"
+        formSubmit: EditQuestionSubmit
     };
     return <QuestionModal setOpen={setOpen} modalTitle={modalTitle} apiCall={apiCall} questionData={questionData}/>
+};
+
+const DeleteQuestionSubmit = function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const formData = new FormData(e.target);
+    const body = {};
+    formData.forEach((value, property) => body[property] = value);
+    console.table(body);
+    return false;
 };
 
 function DeleteQuestionModal({ setOpen, subCollectionID, questionData }) {
     const modalTitle = "Delete Question " + questionData.name;
     const apiCall = {
-        URL: "http://localhost:3001/api/question/delete/" + questionData.id + "?subCollectionID=" + subCollectionID,
-        method: "POST"
+        formSubmit: DeleteQuestionSubmit
     };
     return (<SmallModal setOpen={setOpen} modalTitle={modalTitle} apiCall={apiCall} action="delete">
         Are you sure you want to delete question {questionData.name}?
