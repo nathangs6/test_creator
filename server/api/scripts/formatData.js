@@ -14,4 +14,24 @@ function renameKey(obj, oldKey, newKey) {
     delete obj[oldKey];
 };
 
-module.exports = { convertObjectToArray, renameKey };
+function formatChoiceObject(obj) {
+    for (key in obj) {
+        if (obj[key] === '0') {
+            delete obj[key]
+        } else {
+            newKey = key.match(/(\d+)/g);
+            obj[newKey] = Number(obj[key]);
+            delete obj[key];
+        }
+    }
+}
+
+function filterObject(obj, val) {
+    for (key in obj) {
+        if (obj[key] === val) {
+            delete obj[key];
+        };
+    };
+};
+
+module.exports = { convertObjectToArray, renameKey, formatChoiceObject };

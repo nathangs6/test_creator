@@ -3,12 +3,14 @@ import { SmallModal } from './modal.js'
 
 const NewCollectionSubmit = function (e) {
     e.preventDefault();
-    e.stopPropagation();
     const formData = new FormData(e.target);
     const body = {};
     formData.forEach((value, property) => body[property] = value);
     console.table(body);
-    return false;
+    axios.post("http://localhost:3001/api/collection/new/" + body.owner, body)
+        .then(res => {
+            console.log(res.status)
+        });
 };
 
 function NewCollectionModal({ setOpen, username }) {
@@ -28,12 +30,14 @@ function NewCollectionModal({ setOpen, username }) {
 
 const RenameCollectionSubmit = function (e) {
     e.preventDefault();
-    e.stopPropagation();
     const formData = new FormData(e.target);
     const body = {};
     formData.forEach((value, property) => body[property] = value);
     console.table(body);
-    return false;
+    axios.post("http://localhost:3001/api/collection/rename/" + body.id, body)
+        .then(res => {
+            console.log(res.status)
+        });
 };
 
 function RenameCollectionModal({ setOpen, collectionData }) {
@@ -53,12 +57,14 @@ function RenameCollectionModal({ setOpen, collectionData }) {
 
 const DeleteCollectionSubmit = function (e) {
     e.preventDefault();
-    e.stopPropagation();
     const formData = new FormData(e.target);
     const body = {};
     formData.forEach((value, property) => body[property] = value);
     console.table(body);
-    return false;
+    axios.post("http://localhost:3001/api/collection/delete/" + body.id, body)
+        .then(res => {
+            console.log(res.status)
+        });
 };
 
 function DeleteCollectionModal({ setOpen, collectionData }) {
@@ -78,7 +84,10 @@ const NewSubCollectionSubmit = function (e) {
     const body = {};
     formData.forEach((value, property) => body[property] = value);
     console.table(body);
-    return false;
+    axios.post("http://localhost:3001/api/subcollection/new/" + body.owner, body)
+        .then(res => {
+            console.log(res.status)
+        });
 };
 
 function NewSubCollectionModal({ setOpen, collectionID, collectionName }) {
@@ -98,12 +107,14 @@ function NewSubCollectionModal({ setOpen, collectionID, collectionName }) {
 
 const RenameSubCollectionSubmit = function (e) {
     e.preventDefault();
-    e.stopPropagation();
     const formData = new FormData(e.target);
     const body = {};
     formData.forEach((value, property) => body[property] = value);
     console.table(body);
-    return false;
+    axios.post("http://localhost:3001/api/subcollection/rename/" + body.id, body)
+        .then(res => {
+            console.log(res.status)
+        });
 };
 
 function RenameSubCollectionModal({ setOpen, subCollectionData }) {
@@ -123,12 +134,14 @@ function RenameSubCollectionModal({ setOpen, subCollectionData }) {
 
 const DeleteSubCollectionSubmit = function (e) {
     e.preventDefault();
-    e.stopPropagation();
     const formData = new FormData(e.target);
     const body = {};
     formData.forEach((value, property) => body[property] = value);
     console.table(body);
-    return false;
+    axios.post("http://localhost:3001/api/subcollection/delete/" + body.id, body)
+        .then(res => {
+            console.log(res.status)
+        });
 };
 
 function DeleteSubCollectionModal({ setOpen, subCollectionData }) {

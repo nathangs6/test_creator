@@ -1,8 +1,17 @@
+import axios from 'axios';
 import { BigModal, SmallModal } from './modal.js'
 import modalStyles from './modal.module.css'
 
 function PresetModal({ setOpen, modalTitle, apiCall, presetData }) {
     return (<BigModal setOpen={setOpen} modalTitle={modalTitle} apiCall={apiCall} action="confirm">
+        <input
+            type="hidden"
+            name="owner"
+            value={presetData.owner}/>
+        <input
+            type="hidden"
+            name="id"
+            value={presetData.id}/>
         <label htmlFor="newPresetName">Preset Name:  </label><br/>
         <input
             type="text"
@@ -33,12 +42,14 @@ function PresetModal({ setOpen, modalTitle, apiCall, presetData }) {
 
 const NewPresetSubmit = function (e) {
     e.preventDefault();
-    e.stopPropagation();
     const formData = new FormData(e.target);
     const body = {};
     formData.forEach((value, property) => body[property] = value);
     console.table(body);
-    return false;
+    axios.post("http://localhost:3001/api/preset/new/" + body.owner, body)
+        .then(res => {
+            console.log(res.status)
+        });
 };
 
 function NewPresetModal({ setOpen, username }) {
@@ -64,12 +75,14 @@ function NewPresetModal({ setOpen, username }) {
 
 const EditPresetSubmit = function (e) {
     e.preventDefault();
-    e.stopPropagation();
     const formData = new FormData(e.target);
     const body = {};
     formData.forEach((value, property) => body[property] = value);
     console.table(body);
-    return false;
+    axios.post("http://localhost:3001/api/preset/update/" + body.id, body)
+        .then(res => {
+            console.log(res.status)
+        });
 };
 
 function EditPresetModal({ setOpen, presetData }) {
@@ -87,12 +100,14 @@ function EditPresetModal({ setOpen, presetData }) {
 
 const DeletePresetSubmit = function (e) {
     e.preventDefault();
-    e.stopPropagation();
     const formData = new FormData(e.target);
     const body = {};
     formData.forEach((value, property) => body[property] = value);
     console.table(body);
-    return false;
+    axios.post("http://localhost:3001/api/preset/deete/" + body.id, body)
+        .then(res => {
+            console.log(res.status)
+        });
 };
 
 function DeletePresetModal({ setOpen, presetData }) {

@@ -1,4 +1,5 @@
 const db = require("../../db");
+const { renameKey } = require("./formatData.js");
 
 async function getSubCollectionQuestions(subCollectionID) {
     const subCollectionQuestions = await db.query(
@@ -10,6 +11,9 @@ async function getSubCollectionQuestions(subCollectionID) {
         [subCollectionID]
     );
     questionData = subCollectionQuestions.rows;
+    for (var i = 0; i < questionData.length; i++) {
+        renameKey(questionData[i], "questionid", "id");
+    };
     return questionData;
 };
 

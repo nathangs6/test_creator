@@ -1,4 +1,5 @@
 const db = require("../../db");
+const { renameKey } = require("./formatData.js");
 async function getUserCollections(userID) {
     const collectionQueryResults = await db.query(
         "SELECT Collection.CollectionID, Collection.Name " +
@@ -8,7 +9,11 @@ async function getUserCollections(userID) {
             "WHERE JunctionUserAccountCollection.UserAccountID = $1", 
         [userID]
     );
-    return collectionQueryResults.rows;
+    collectionData = collectionQueryResults.rows;
+    for (var i = 0; i < collectionData.length; i++) {
+        renameKey(collectionData[i], "collectionid", "id");
+    };
+    return collectionData;
 };
 
 async function addCollectionToUser(userID, collectionID) {

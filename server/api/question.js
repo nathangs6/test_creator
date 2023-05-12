@@ -1,8 +1,26 @@
-// question.js - Collection route module
+// question.js - Question route module
 const express = require("express");
 const db = require("../db");
 const { getUserID } = require("./scripts/user.js");
+const { generateTest } = require("./scripts/generateTest.js");
+const { getSubCollectionQuestions } =require("./scripts/question.js");
 const router = express.Router();
+
+router.get("/:subCollectionID", async (req, res) => { 
+    try {
+        subCollectionID = req.params.subCollectionID;
+        const questionData = await getSubCollectionQuestions(subCollectionID);
+        res.status(200).json({
+            status: "success",
+            data: {
+                questionData
+            }
+        });
+        
+    } catch(err) {
+        console.log(err)
+    };
+});
 
 router.post("/new/:username", async (req, res) => {
     // create new question

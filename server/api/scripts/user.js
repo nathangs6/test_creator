@@ -28,17 +28,21 @@ async function verifyLogin(inputtedUsername, inputtedPassword) {
 };
 
 async function getUserID(username) {
-    const results = await db.query(
-        "SELECT UserAccountID " + 
-        "FROM UserAccount " + 
-        "WHERE Username = $1",
-        [username]
-    );
-    userIDNotFound = results.rowCount === 0;
-    if (userIDNotFound) {
-        return null;
+    try {
+        const results = await db.query(
+            "SELECT UserAccountID " + 
+            "FROM UserAccount " + 
+            "WHERE Username = $1",
+            [username]
+        );
+        userIDNotFound = results.rowCount === 0;
+        if (userIDNotFound) {
+            return null;
+        }
+        return results.rows[0].useraccountid;
+    } catch(err) {
+        console.log(err)
     }
-    return results.rows[0].useraccountid;
 };
 
 

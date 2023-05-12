@@ -27,12 +27,14 @@ function QuestionModal({ setOpen, modalTitle, apiCall, questionData }) {
 
 const NewQuestionSubmit = function (e) {
     e.preventDefault();
-    e.stopPropagation();
     const formData = new FormData(e.target);
     const body = {};
     formData.forEach((value, property) => body[property] = value);
     console.table(body);
-    return false;
+    axios.post("http://localhost:3001/api/question/new/" + body.owner, body)
+        .then(res => {
+            console.log(res.status)
+        });
 };
 
 function NewQuestionModal({ setOpen, username, subCollectionID, subCollectionName }) {
@@ -52,12 +54,14 @@ function NewQuestionModal({ setOpen, username, subCollectionID, subCollectionNam
 
 const EditQuestionSubmit = function (e) {
     e.preventDefault();
-    e.stopPropagation();
     const formData = new FormData(e.target);
     const body = {};
     formData.forEach((value, property) => body[property] = value);
     console.table(body);
-    return false;
+    axios.post("http://localhost:3001/api/question/update/" + body.id, body)
+        .then(res => {
+            console.log(res.status)
+        });
 };
 
 function EditQuestionModal({ setOpen, questionData }) {
@@ -70,12 +74,14 @@ function EditQuestionModal({ setOpen, questionData }) {
 
 const DeleteQuestionSubmit = function (e) {
     e.preventDefault();
-    e.stopPropagation();
     const formData = new FormData(e.target);
     const body = {};
     formData.forEach((value, property) => body[property] = value);
     console.table(body);
-    return false;
+    axios.post("http://localhost:3001/api/question/delete/" + body.id, body)
+        .then(res => {
+            console.log(res.status)
+        });
 };
 
 function DeleteQuestionModal({ setOpen, subCollectionID, questionData }) {

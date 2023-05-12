@@ -9,40 +9,11 @@ const { getCollectionSubCollections } = require("./scripts/subcollection.js");
 const { getSubCollectionQuestions } = require("./scripts/question.js");
 const { renameKey } = require("./scripts/formatData.js");
 
-// define helper functions
-
-async function getCollectionData(userID) {
-    const collectionData = await getUserCollections(userID);
-    for (var i = 0; i < collectionData.length; i++) {
-        await addSubCollectionData(collectionData[i]);
-        renameKey(collectionData[i], "collectionid", "id");
-    };
-    return collectionData;
-};
-
-async function addSubCollectionData(collection) {
-    collectionID = collection.collectionid;
-    subCollections = await getCollectionSubCollections(collectionID);
-    for (var j = 0; j < subCollections.length; j++) {
-        await addQuestionData(subCollections[j]);
-        renameKey(subCollections[j], "subcollectionid", "id");
-    };
-    collection.subCollections = subCollections;
-};
-
-async function addQuestionData(subCollection) {
-    subCollectionID = subCollection.subcollectionid;
-    questions = await getSubCollectionQuestions(subCollectionID);
-    for (var k = 0; k < questions.length; k++) {
-        renameKey(questions[k], "questionid", "id");
-    };
-    subCollection.questions = questions;
-};
-
 // define routes
 router.get("/:username", async function (req, res) {
     // Function that retrieves all user data for the main page
     username = req.params.username;
+    console.log(username);
 
     loginResult = "success";
     if (loginResult === "fail") {
@@ -55,14 +26,9 @@ router.get("/:username", async function (req, res) {
 
     userID = await getUserID(username);
 
-    const presetData = await getUserPresets(userID);
-    const collectionData = await getCollectionData(userID);
-
     res.status(200).json({
         status: "success",
         data: {
-            "presetData": presetData,
-            "collectionData": collectionData
         }
     });
 });

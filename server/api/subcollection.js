@@ -2,10 +2,28 @@
 const express = require("express");
 const db = require("../db");
 const router = express.Router();
+const { getCollectionSubCollections } = require("./scripts/subcollection.js");
 const { cleanSubCollections } = require("./scripts/dbClean.js");
 
 
 // define routes
+
+router.get("/:collectionID", async (req, res) => {
+try {
+    collectionID = req.params.collectionID;
+    const subCollectionData = await getCollectionSubCollections(collectionID);
+    res.status(200).json({
+        status: "success",
+        data: {
+            subCollectionData
+        }
+    });
+    
+} catch(err) {
+    console.log(err);
+};
+});
+
 router.post("/new/:collectionID", async (req, res) => {
     // Creates a new subcollection
     try {

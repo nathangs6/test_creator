@@ -1,14 +1,33 @@
-// subcollection.js - Collection route module
+// preset.js - Preset route module
 const express = require("express");
 const db = require("../db");
 const { getUserID } = require("./scripts/user.js");
+const { getUserPresets} = require("./scripts/preset.js");
 const router = express.Router();
 
 // define routes
+router.get("/:username", async (req, res) => {
+    try {
+        userID = await getUserID(req.params.username);
+        const presetData = await getUserPresets(userID);
+        res.status(200).json({
+            status: "success",
+            data: {
+                presetData
+            }
+        });
+        
+
+    } catch(err) {
+        console.log(err);
+    };
+});
+
 router.post("/new/:username", async (req, res) => {
     // Creates a new preset
     try {
         userID = await getUserID(req.params.username);
+        console.log(req.body);
         presetName = req.body.newPresetName;
         presetPreamble = req.body.newPresetPreamble;
         presetSep = req.body.newPresetSep;
