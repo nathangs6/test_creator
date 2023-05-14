@@ -1,99 +1,106 @@
-import { BigModal, SmallModal } from './modal.js'
-import modalStyles from './modal.module.css'
+import { useState, useContext } from 'react';
+import API from '../../apis/api.js';
+import { BigModal, SmallModal } from './modal.js';
+import { QuestionContext } from '../../context/QuestionContext.js';
+import modalStyles from './modal.module.css';
 
-function QuestionModal({ setOpen, modalTitle, apiCall, questionData }) {
-    return (<BigModal setOpen={setOpen} modalTitle={modalTitle} apiCall={apiCall} action="confirm">
+function QuestionModal({ setOpen, modalTitle, handleSubmit, questionData }) {
+    return (<BigModal setOpen={setOpen} modalTitle={modalTitle} handleSubmit={handleSubmit} action="confirm">
         <label htmlFor="newQuestionName">Question Name:  </label><br/>
         <input
             type="text"
             className={modalStyles.smallTextarea}
             name="newQuestionName"
-            defaultValue={questionData.name}
+            value={questionData.name}
+            onChange={e => questionData.setName(e.target.value)}
+            placeholder={"Name"}
             required/>
         <label htmlFor="newQuestionContent">Question Content: </label><br/>
         <textarea
             className={modalStyles.largeTextarea}
             name="newQuestionContent"
-            defaultValue={questionData.content}
+            value={questionData.content}
+            onChange={e => questionData.setContent(e.target.value)}
             required/>
         <label htmlFor="newQuestionSource">Question Source: </label><br/>
         <textarea
             className={modalStyles.mediumTextarea}
             name="newQuestionSource"
-            defaultValue={questionData.source}
+            value={questionData.source}
+            onChange={e => questionData.setSource(e.target.value)}
             required/>
     </BigModal>);
 };
 
-const NewQuestionSubmit = function (e) {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const body = {};
-    formData.forEach((value, property) => body[property] = value);
-    console.table(body);
-    axios.post("http://localhost:3001/api/question/new/" + body.owner, body)
-        .then(res => {
-            console.log(res.status)
-        });
-};
+export function NewQuestionForm({ setOpen, username, subCollectionID, subCollectionName }) {
+    const {addQuestion} = useContext(QuestionContext);
+    const modalTitle = "New Question";
+    const [name, setName] = useState("");
+    const [content, setContent] = useState("");
+    const [source, setSource] = useState("");
 
-function NewQuestionModal({ setOpen, username, subCollectionID, subCollectionName }) {
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        console.log("Adding question");
+        const response = await API.post("/question/new/" + username, {
+            newQuestionName: name,
+            newQuestionContent: content,
+            newQuestionSource: source,
+            subCollectionID
+        });
+        addQuestion(response.data.data.questionData);
+        setOpen(false);
+    };
+
     const questionData = {
-        owner: subCollectionName,
-        id: null,
-        name: "Name",
-        content: "Prove \$1 + 1 = 2\$.",
-        source: "Somewhere"
-    };
-    const modalTitle = "New Question For " + subCollectionName;
-    const apiCall = {
-        formSubmit: NewQuestionSubmit
-    };
-    return <QuestionModal setOpen={setOpen} modalTitle={modalTitle} apiCall={apiCall} questionData={questionData}/>
+        name, setName,
+        content, setContent,
+        source, setSource
+    }
+
+    return <QuestionModal setOpen={setOpen} modalTitle={modalTitle} handleSubmit={handleSubmit} questionData={questionData}/>
 };
 
-const EditQuestionSubmit = function (e) {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const body = {};
-    formData.forEach((value, property) => body[property] = value);
-    console.table(body);
-    axios.post("http://localhost:3001/api/question/update/" + body.id, body)
-        .then(res => {
-            console.log(res.status)
+export function EditQuestionForm({ setOpen, currentData }) {
+    const {updateQuestion} = useContext(QuestionContext);
+    const modalTitle = "Edit Question";
+    const [name, setName] = useState(currentData.name);
+    const [content, setContent] = useState(currentData.content);
+    const [source, setSource] = useState(currentData.source);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const response = await API.post("/question/update/" + currentData.id, {
+            newQuestionName: name,
+            newQuestionContent: content,
+            newQuestionSource: source
         });
-};
-
-function EditQuestionModal({ setOpen, questionData }) {
-    const modalTitle = "Edit Preset " + questionData.name;
-    const apiCall = {
-        formSubmit: EditQuestionSubmit
+        updateQuestion(response.data.data.questionData);
+        setOpen(false);
     };
-    return <QuestionModal setOpen={setOpen} modalTitle={modalTitle} apiCall={apiCall} questionData={questionData}/>
+
+    const questionData = {
+        name, setName,
+        content, setContent,
+        source, setSource
+    }
+
+    return <QuestionModal setOpen={setOpen} modalTitle={modalTitle} handleSubmit={handleSubmit} questionData={questionData}/>
+
 };
 
-const DeleteQuestionSubmit = function (e) {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const body = {};
-    formData.forEach((value, property) => body[property] = value);
-    console.table(body);
-    axios.post("http://localhost:3001/api/question/delete/" + body.id, body)
-        .then(res => {
-            console.log(res.status)
-        });
-};
+export function DeleteQuestionForm({ setOpen, subCollectionID, questionData }) {
+    const {deleteQuestion} = useContext(QuestionContext);
+    const modalTitle = "Delete Question";
 
-function DeleteQuestionModal({ setOpen, subCollectionID, questionData }) {
-    const modalTitle = "Delete Question " + questionData.name;
-    const apiCall = {
-        formSubmit: DeleteQuestionSubmit
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        await API.post("/question/delete/" + questionData.id, {});
+        deleteQuestion(questionData.id);
+        setOpen(false);
     };
-    return (<SmallModal setOpen={setOpen} modalTitle={modalTitle} apiCall={apiCall} action="delete">
+
+    return (<SmallModal setOpen={setOpen} modalTitle={modalTitle} handleSubmit={handleSubmit} action="delete">
         Are you sure you want to delete question {questionData.name}?
     </SmallModal>);
 };
-
-export { NewQuestionModal }
-export { EditQuestionModal }
-export { DeleteQuestionModal }

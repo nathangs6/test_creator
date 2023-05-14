@@ -3,6 +3,7 @@ const express = require("express");
 const db = require("../db");
 const { getUserID } = require("./scripts/user.js");
 const { getUserPresets} = require("./scripts/preset.js");
+const { renameKey } = require("./scripts/formatData.js");
 const router = express.Router();
 
 // define routes
@@ -34,12 +35,17 @@ router.post("/new/:username", async (req, res) => {
         presetPostamble = req.body.newPresetPostamble;
         const presetCreation = await db.query(
             "INSERT INTO Preset (Name, Preamble, Sep, Postamble, UserAccountID) " + 
-            "VALUES ($1, $2, $3, $4, $5) ",
+            "VALUES ($1, $2, $3, $4, $5) " + 
+            "RETURNING *",
             [presetName, presetPreamble, presetSep, presetPostamble, userID]
         );
-        presetID = presetCreation.presetid;
+        newPreset = presetCreation.rows[0];
+        renameKey(newPreset, "presetid", "id");
         res.status(200).json({
             status: "success",
+            data: {
+                newPreset
+            }
         });
         return res;
     } catch (err) {
@@ -64,6 +70,7 @@ function constructPresetUpdate(updateData, presetID) {
     queryString = queryString.slice(0,-1);
     valueCounter++;
     queryString = queryString + " WHERE PresetID = $" + valueCounter;
+    queryString = queryString + " RETURNING *";
     queryValues.push(presetID)
     return {text: queryString, values: queryValues};
 };
@@ -79,8 +86,11 @@ router.post("/update/:presetID", async (req, res) => {
         };
         query = constructPresetUpdate(updateData, presetID);
         const presetUpdateResult = await db.query(query);
+        const presetData = presetUpdateResult.rows[0];
+        renameKey(presetData, "presetid", "id");
         res.status(200).json({
             status: "success",
+            data: { presetData }
         });
         
     } catch (err) {

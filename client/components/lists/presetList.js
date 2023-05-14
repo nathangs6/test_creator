@@ -1,19 +1,19 @@
 import { useState, useEffect, useContext } from 'react';
-import { NewPresetModal, EditPresetModal, DeletePresetModal } from '../../components/modals/presetModals.js';
+import { NewPresetModal, NewPresetForm, EditPresetForm, DeletePresetModal, DeletePresetForm } from '../../components/modals/presetModals.js';
 import { PresetContext } from '../../context/PresetContext.js';
 import API from '../../apis/api.js';
 
-export function newPreset(username) {
+export function NewPreset({username}) {
     const [isOpen, setOpen] = useState(false);
     return (<>
         <button onClick={() => setOpen(true)}>New Preset</button>
-        {isOpen && <NewPresetModal setOpen={setOpen} username={username}/>}
+        {isOpen && <NewPresetForm setOpen={setOpen} username={username}/>}
     </>);
 };
 
 function EditPreset(props) {
     const [isOpen, setOpen] = useState(false);
-    const presetData = {
+    const currentData = {
         owner: props.username,
         id: props.id,
         name: props.name,
@@ -23,7 +23,7 @@ function EditPreset(props) {
     };
     return (<>
         <button onClick={() => setOpen(true)}>Edit</button>
-        {isOpen && <EditPresetModal setOpen={setOpen} presetData={presetData}/>}
+        {isOpen && <EditPresetForm setOpen={setOpen} currentData={currentData}/>}
     </>);
 };
 
@@ -36,14 +36,19 @@ function DeletePreset(props) {
     };
     return (<>
         <button onClick={() => setOpen(true)}>Delete</button>
-        {isOpen && <DeletePresetModal setOpen={setOpen} presetData={presetData}/>}
+        {isOpen && <DeletePresetForm setOpen={setOpen} presetData={presetData}/>}
     </>);
 };
 
-export function PresetListItem(id, name, preamble, sep, postamble, username) {
+export function PresetListItem({ id, name, preamble, sep, postamble, username, handleChange }) {
     return (
         <tr>
-            <td><input type="radio" name="presetSelection" value={id} required/></td>
+            <td><input type="radio"
+                form="generate-form"
+                name="presetSelection" 
+                value={id} 
+                onChange={e => handleChange(e)}
+                required/></td>
             <td>{name}</td>
             <td><EditPreset username={username} id={id} name={name} preamble={preamble} sep={sep} postamble={postamble}/></td>
             <td><DeletePreset username={username} id={id} name={name}/></td>
@@ -58,8 +63,7 @@ export function PresetList(props) {
             const fetchPresets = async () => {
                 const response = await API.get("/preset/"+props.username);
                 console.log(response.data.data.presetData);
-                setPresets(response.data.data.presetData)
-                console.log(presets);
+                setPresets(response.data.data.presetData);
             }
             fetchPresets();
         } catch(err) {
@@ -79,7 +83,7 @@ export function PresetList(props) {
                         <th>Delete</th>
                     </tr>
                     {presets.map(({ id, name, preamble, sep, postamble }) => {
-                        return PresetListItem(id, name, preamble, sep, postamble, props.username)
+                        return <PresetListItem id={id} name={name} preamble={preamble} sep={sep} postamble={postamble} username={props.username} handleChange={props.handleChange}/>
                     })}
                 </tbody>
             </table>

@@ -1,10 +1,11 @@
 import Layout from '../../components/layout.js';
 import UserInfo from '../../components/userInfo.js';
 import Modal from '../../components/modals/modal.js';
+import API from '../../apis/api.js';
 import { PresetContextProvider } from '../../context/PresetContext.js';
-import { newPreset, PresetList } from '../../components/lists/presetList.js';
+import { NewPreset, PresetList } from '../../components/lists/presetList.js';
 import {CollectionContextProvider } from '../../context/CollectionContext.js';
-import { newCollection, CollectionList} from '../../components/lists/collectionList.js';
+import { NewCollection, CollectionList} from '../../components/lists/collectionList.js';
 import utilStyles from '../../styles/utils.module.css';
 import convertObjectToArray from '../../lib/convertObjectToArray.js';
 import { useRouter } from 'next/router';
@@ -16,6 +17,24 @@ import { ModalConfirmButton } from '../../components/buttons.js';
 function UserPage() {
     const router = useRouter();
     const { username } = router.query;
+
+    const [testSelection, setTestSelection] = useState({
+        presetSelection: ""
+    });
+
+    const handleChange = (e) => {
+        setTestSelection({
+            ...testSelection,
+            [e.target.name]: e.target.value
+        });
+    };
+
+    const GenerateTest = async (e) => {
+        e.preventDefault();
+        await API.post("/generate/" + username, {testSelection});
+        await API.get("/generate/download/" + username, {responseType: 'arraybuffer'});
+    };
+
     return (<Layout>
         <div className={utilStyles.centre}>
             <h1>Hello {username}</h1>
@@ -23,20 +42,20 @@ function UserPage() {
         <UserInfo username={username}/>
         <hr/>
         <section>
-            <form id="generate-form" action="http://localhost:3001/api/generate/" method="POST"></form>
+            <form onSubmit={e => GenerateTest(e)} id="generate-form"></form>
             <h2>Generate Practice Test</h2>
             <h3>Select Preset</h3>
-            {newPreset(username)}
-            <div>
-                <PresetContextProvider>
-                    <PresetList username={username}/>
-                </PresetContextProvider>
-            </div>
+            <PresetContextProvider>
+                <NewPreset username={username}/>
+                <div>
+                    <PresetList username={username} handleChange={handleChange}/>
+                </div>
+            </PresetContextProvider>
             <h3>Select Questions</h3>
             <div>
-                {newCollection(username)}
                 <CollectionContextProvider>
-                    <CollectionList username={username}/>
+                    <NewCollection username={username}/>
+                    <CollectionList username={username} handleChange={handleChange}/>
                 </CollectionContextProvider>
             </div>
             <input form="generate-form" type="submit" value="Generate Practice Test"/>

@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
-import { GenNewQuestion, QuestionList } from '../../components/lists/questionList.js';
-import { NewSubCollectionModal, RenameSubCollectionModal, DeleteSubCollectionModal } from '../../components/modals/collectionModals.js';
+import { NewQuestion, QuestionList } from '../../components/lists/questionList.js';
+import { NewSubCollectionForm, RenameSubCollectionForm, DeleteSubCollectionForm } from '../../components/modals/subCollectionForms.js';
 import { SubCollectionContext } from '../../context/SubCollectionContext.js';
 import { QuestionContextProvider } from '../../context/QuestionContext.js';
 import API from '../../apis/api.js';
@@ -9,7 +9,7 @@ export function NewSubCollection(props) {
     const [isOpen, setOpen] = useState(false);
     return (<>
         <button type="button" onClick={() => setOpen(true)}>New Subcollection</button>
-        {isOpen && <NewSubCollectionModal setOpen={setOpen} collectionID={props.id} collectionName={props.name}/>}
+        {isOpen && <NewSubCollectionForm setOpen={setOpen} collectionID={props.id} collectionName={props.name}/>}
     </>);
 };
 
@@ -21,7 +21,7 @@ function RenameSubCollection(props) {
     }
     return (<>
         <button type="button" onClick={() => setOpen(true)}>Rename</button>
-        {isOpen && <RenameSubCollectionModal setOpen={setOpen} subCollectionData={subCollectionData}/>}
+        {isOpen && <RenameSubCollectionForm setOpen={setOpen} subCollectionData={subCollectionData}/>}
     </>)
 }
 
@@ -33,11 +33,11 @@ function DeleteSubCollection(props) {
     };
     return (<>
         <button onClick={() => setOpen(true)}>Delete</button>
-        {isOpen && <DeleteSubCollectionModal setOpen={setOpen} subCollectionData={subCollectionData}/>}
+        {isOpen && <DeleteSubCollectionForm setOpen={setOpen} subCollectionData={subCollectionData}/>}
     </>)
 }
 
-export function SubCollectionListItem(id, name, username) {
+export function SubCollectionListItem(id, name, username, handleChange) {
     return (
         <li key={id}>
             <input 
@@ -47,12 +47,13 @@ export function SubCollectionListItem(id, name, username) {
                 defaultValue="0" 
                 name={"subCollectionCount" + id}
                 step="1" 
+                onChange={e => handleChange(e)}
                 style={{width: "3em"}}/> {name}&nbsp;&nbsp;
             <RenameSubCollection id={id} name={name}/>&nbsp;&nbsp;
             <DeleteSubCollection id={id} name={name}/>&nbsp;&nbsp;
-            <GenNewQuestion username={username} id={id} name={name}/>&nbsp;&nbsp;
-            <button type="button">Show Questions</button>
             <QuestionContextProvider>
+                <NewQuestion username={username} id={id} name={name}/>&nbsp;&nbsp;
+                <button type="button">Show Questions</button>
                 <QuestionList subCollectionID={id} name={name}/>
             </QuestionContextProvider>
         </li>
@@ -66,9 +67,7 @@ export function SubCollectionList(props) {
             const fetchSubCollections = async () => {
                 console.log("Fetching subcollections for collection " + props.collectionID + "!");
                 const response = await API.get("/subcollection/"+props.collectionID);
-                console.log(response);
                 setSubCollections(response.data.data.subCollectionData);
-                console.log(subCollections);
             }
             fetchSubCollections();
         } catch(err) {
@@ -81,7 +80,7 @@ export function SubCollectionList(props) {
     return (
         <ul>
             {subCollections.map(({ id, name, questions }) => {
-                return SubCollectionListItem(id, name, props.username)
+                return SubCollectionListItem(id, name, props.username, props.handleChange)
             })}
         </ul>
     )

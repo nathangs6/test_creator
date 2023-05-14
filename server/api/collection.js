@@ -53,19 +53,22 @@ router.get("/:username", async (req, res) => {
 
 router.post("/new/:username", async (req, res) => {
     // Creates a new collection
+    console.log("Attempting to create a new collection for user " + req.params.username);
     try {
         userID = await getUserID(req.params.username);
         collectionName = req.body.newCollectionName;
         const collectionCreation = await db.query(
             "INSERT INTO Collection (Name) " + 
             "VALUES ($1) " + 
-            "RETURNING CollectionID",
+            "RETURNING *",
             [collectionName]
         );
-        collectionID = collectionCreation.rows[0].collectionid;
-        await addCollectionToUser(userID, collectionID);
+        newCollection = collectionCreation.rows[0];
+        await addCollectionToUser(userID, newCollection.collectionid);
+        renameKey(newCollection, "collectionid", "id");
         res.status(200).json({
             status: "success",
+            data: { collectionData: newCollection }
         });
     } catch (err) {
         console.log(err);
@@ -73,17 +76,22 @@ router.post("/new/:username", async (req, res) => {
 });
 
 router.post("/rename/:collectionID", async (req, res) => {
+    console.log("Attempting to rename collection with ID " + req.params.collectionID);
     collectionID = req.params.collectionID;
     newCollectionName = req.body.newCollectionName;
     try {
         const collectionRenameResult = await db.query(
             "UPDATE Collection " + 
             "SET Name = $1 " + 
-            "WHERE CollectionID = $2 ", 
+            "WHERE CollectionID = $2 " + 
+            "RETURNING *", 
             [newCollectionName, collectionID]
         );
+        collectionData = collectionRenameResult.rows[0];
+        renameKey(collectionData, "collectionid", "id");
         res.status(200).json({
             status: "success",
+            data: { collectionData }
         });
         return res;
         
@@ -93,6 +101,7 @@ router.post("/rename/:collectionID", async (req, res) => {
 });
 
 router.post("/delete/:collectionID", async (req, res) => {
+    console.log("Attempting to delete collection with collection ID " + req.params.collectionID);
     try {
         collectionID = req.params.collectionID;
         await db.query(

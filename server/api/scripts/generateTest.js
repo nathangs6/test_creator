@@ -2,7 +2,7 @@ const db = require("../../db");
 const fs = require("fs/promises");
 const shell = require("shelljs");
 
-async function generateTest(presetID, subCollectionChoices, minWait) {
+async function generateTest(username, presetID, subCollectionChoices, minWait) {
     // Input:
     //      - subCollectionChoices: a list of the form [id: number of questions]
     //      - minWait: Time span (for example, a week)
@@ -18,8 +18,9 @@ async function generateTest(presetID, subCollectionChoices, minWait) {
     questionIDList = await getQuestionList(subCollectionChoices);
     testString = await generateTestString(preset, questionIDList);
     try {
-        await fs.writeFile('/home/yewlkang/github/test_creator/server/api/scripts/output/practiceTest.tex', testString);
-        shell.exec('./api/scripts/compile.sh');
+        const filePath = '/home/yewlkang/github/test_creator/server/api/scripts/output/' + username + 'PracticeTest.tex';
+        await fs.writeFile(filePath, testString);
+        shell.exec('./api/scripts/compile.sh ' + filePath);
     } catch(err) {
         console.log(err);
         return false;

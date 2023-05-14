@@ -1,9 +1,11 @@
-import axios from 'axios';
-import { BigModal, SmallModal } from './modal.js'
-import modalStyles from './modal.module.css'
+import { useState, useContext } from 'react';
+import API from '../../apis/api.js';
+import { BigModal, SmallModal } from './modal.js';
+import { PresetContext } from '../../context/PresetContext.js';
+import modalStyles from './modal.module.css';
 
-function PresetModal({ setOpen, modalTitle, apiCall, presetData }) {
-    return (<BigModal setOpen={setOpen} modalTitle={modalTitle} apiCall={apiCall} action="confirm">
+function PresetModal({ setOpen, modalTitle, handleSubmit, presetData }) {
+    return (<BigModal setOpen={setOpen} modalTitle={modalTitle} handleSubmit={handleSubmit} action="confirm">
         <input
             type="hidden"
             name="owner"
@@ -17,109 +19,126 @@ function PresetModal({ setOpen, modalTitle, apiCall, presetData }) {
             type="text"
             className={modalStyles.smallTextarea}
             name="newPresetName"
-            defaultValue={presetData.name}
+            value={presetData.name}
+            onChange={e => presetData.setName(e.target.value)}
             required/>
         <label htmlFor="newPresetPreamble">Preset Preamble: </label><br/>
         <textarea
             className={modalStyles.largeTextarea}
             name="newPresetPreamble"
-            defaultValue={presetData.preamble}
+            value={presetData.preamble}
+            onChange={e => presetData.setPreamble(e.target.value)}
             required></textarea>
         <label htmlFor="newPresetSep">Preset Separator: </label><br/>
         <textarea
             className={modalStyles.mediumTextarea}
             name="newPresetSep"
-            defaultValue={presetData.sep}
+            value={presetData.sep}
+            onChange={e => presetData.setSep(e.target.value)}
             />
         <label htmlFor="newPresetPostamble">Preset Postamble: </label><br/>
         <textarea
             className={modalStyles.mediumTextarea}
             name="newPresetPostamble"
-            defaultValue={presetData.postamble}
+            value={presetData.postamble}
+            onChange={e => presetData.setPostamble(e.target.value)}
             required/>
     </BigModal>);
 };
 
-const NewPresetSubmit = function (e) {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const body = {};
-    formData.forEach((value, property) => body[property] = value);
-    console.table(body);
-    axios.post("http://localhost:3001/api/preset/new/" + body.owner, body)
-        .then(res => {
-            console.log(res.status)
-        });
-};
+export function NewPresetForm({ setOpen, username }) {
+    const {addPreset} = useContext(PresetContext);
+    const [owner, setOwner] = useState(username);
+    const [id, setID] = useState(-1);
+    const [name, setName] = useState("Name");
+    const [preamble, setPreamble] = useState("\\documentclass{article}\n\\begin{document}");
+    const [sep, setSep] = useState("\\hrule");
+    const [postamble, setPostamble] = useState("\\end{document}");
 
-function NewPresetModal({ setOpen, username }) {
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await API.post("/preset/new/"+owner, {
+                newPresetName: name,
+                newPresetPreamble: preamble,
+                newPresetSep: sep,
+                newPresetPostamble: postamble
+            });
+            console.log(response.data.data.newPreset);
+            addPreset(response.data.data.newPreset);
+            setOpen(false);
+        } catch(err) {
+            console.log(err);
+        };
+    };
+
+    const modalTitle = "Create New Preset";
     const presetData = {
-        owner: username,
-        id: null,
-        name: "Name",
-        preamble: "\\documentclass{article}\n\\begin{document}",
-        sep: "\\hrule",
-        postamble: "\\end{document}"
+        owner, setOwner,
+        id, setID,
+        name, setName,
+        preamble, setPreamble,
+        sep, setSep,
+        postamble, setPostamble
     };
-    const modalTitle = "New Preset For " + username;
-    const apiCall = {
-        formSubmit: NewPresetSubmit
-    };
-    return <PresetModal 
-        setOpen={setOpen}
-        modalTitle={modalTitle} 
-        presetData={presetData} 
-        apiCall={apiCall}
-    />
+
+    return <PresetModal setOpen={setOpen} handleSubmit={handleSubmit} presetData={presetData}/>
 };
 
-const EditPresetSubmit = function (e) {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const body = {};
-    formData.forEach((value, property) => body[property] = value);
-    console.table(body);
-    axios.post("http://localhost:3001/api/preset/update/" + body.id, body)
-        .then(res => {
-            console.log(res.status)
-        });
-};
+export function EditPresetForm({ setOpen, currentData }) {
+    const {updatePreset} = useContext(PresetContext);
+    const [owner, setOwner] = useState(currentData.username);
+    const [id, setID] = useState(currentData.id);
+    const [name, setName] = useState(currentData.name);
+    const [preamble, setPreamble] = useState(currentData.preamble);
+    const [sep, setSep] = useState(currentData.sep);
+    const [postamble, setPostamble] = useState(currentData.postamble);
 
-function EditPresetModal({ setOpen, presetData }) {
-    const modalTitle = "Edit Preset " + presetData.name;
-    const apiCall = {
-        formSubmit: EditPresetSubmit
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await API.post("/preset/update/"+id, {
+                newPresetName: name,
+                newPresetPreamble: preamble,
+                newPresetSep: sep,
+                newPresetPostamble: postamble
+            });
+            updatePreset(response.data.data.presetData);
+            setOpen(false);
+        } catch(err) {
+            console.log(err);
+        };
     };
-    return <PresetModal 
-        setOpen={setOpen} 
-        modalTitle={modalTitle} 
-        presetData={presetData} 
-        apiCall={apiCall}
-    />
-};
 
-const DeletePresetSubmit = function (e) {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const body = {};
-    formData.forEach((value, property) => body[property] = value);
-    console.table(body);
-    axios.post("http://localhost:3001/api/preset/deete/" + body.id, body)
-        .then(res => {
-            console.log(res.status)
-        });
-};
-
-function DeletePresetModal({ setOpen, presetData }) {
-    const modalTitle = "Delete Preset " + presetData.name;
-    const apiCall = {
-        formSubmit: DeletePresetSubmit
+    const modalTitle = "Edit Preset";
+    const presetData = {
+        owner, setOwner,
+        id, setID,
+        name, setName,
+        preamble, setPreamble,
+        sep, setSep,
+        postamble, setPostamble
     };
-    return (<SmallModal setOpen={setOpen} modalTitle={modalTitle} apiCall={apiCall} action="delete">
+
+    return <PresetModal setOpen={setOpen} handleSubmit={handleSubmit} presetData={presetData}/>
+};
+
+export function DeletePresetForm({ setOpen, presetData }) {
+    const {deletePreset, setPresets} = useContext(PresetContext);
+    const modalTitle = "Delete Preset";
+
+    const handleSubmit = async function (e) {
+        e.preventDefault();
+        try {
+            await API.post("/preset/delete/"+presetData.id, {});
+            deletePreset(presetData.id);
+            setOpen(false);
+        } catch(err) {
+            console.log(err);
+        };
+    };
+
+    return <SmallModal setOpen={setOpen} modalTitle={modalTitle} handleSubmit={handleSubmit} action="delete">
         Are you sure you want to delete preset {presetData.name}?
-    </SmallModal>);
-};
-
-export { NewPresetModal }
-export { EditPresetModal }
-export { DeletePresetModal }
+    </SmallModal>
+}

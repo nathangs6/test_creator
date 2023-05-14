@@ -4,16 +4,16 @@ const { generateTest } = require("./scripts/generateTest.js");
 const { formatChoiceObject } = require("./scripts/formatData.js");
 const router = express.Router();
 
-router.post("/", async (req, res) => {
-    const presetID = req.body.presetSelection;
-    var subCollectionChoices = req.body;
+router.post("/:username", async (req, res) => {
+    const username = req.params.username;
+    const presetID = req.body.testSelection.presetSelection;
+    var subCollectionChoices = req.body.testSelection;
     delete subCollectionChoices["presetSelection"];
+    console.log(presetID);
+    console.log(subCollectionChoices);
     formatChoiceObject(subCollectionChoices, '0');
     console.log(subCollectionChoices);
-    const testString = await generateTest(presetID, subCollectionChoices, 0);
-    res.download('./api/scripts/output/practiceTest.pdf', function (error) {
-        console.log("Error: ", error)
-    });
+    const testString = await generateTest(username, presetID, subCollectionChoices, 0);
     res.status(200).json({
         status: "success",
         data: {
@@ -21,6 +21,25 @@ router.post("/", async (req, res) => {
         }
     });
     return res;
+});
+
+router.get("/download/:username", async (req, res) => {
+    console.log("Downloading");
+    const username = req.params.username;
+    try {
+        filePath = './api/scripts/output/' + username + 'PracticeTest.pdf';
+        console.log(filePath);
+        //res.download(filePath, function (error) {
+        //    console.log("Error: ", error)
+        //});
+        res.download(filePath);
+    } catch(err) {
+        console.log(err);
+    };
+});
+
+router.post("/test", async (req, res) => {
+    console.log(req.body.testSelection);
 });
 
 router.get("/test2", async (req, res) => {
@@ -41,7 +60,7 @@ router.post("/test", async (req, res) => {
                 output: testString
             }
         });
-        
+
     } catch(err) {
         console.log(err);
     }
