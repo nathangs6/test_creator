@@ -32,7 +32,13 @@ function UserPage() {
     const GenerateTest = async (e) => {
         e.preventDefault();
         await API.post("/generate/" + username, {testSelection});
-        await API.get("/generate/download/" + username, {responseType: 'arraybuffer'});
+        const response = await API.get("/generate/download/" + username, {responseType: 'blob'});
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute("download", "file.pdf");
+        document.body.appendChild(link);
+        link.click();
     };
 
     return (<Layout>
