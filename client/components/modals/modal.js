@@ -52,3 +52,25 @@ export function SmallModal({ setOpen, modalTitle, action, handleSubmit, children
         </form>
     </>)
 };
+
+export function NotificationModal({ setOpen, modalTitle, children }) {
+    return (<>
+        <div className={modalStyles.modalBackground} onClick={() => setOpen(false)}/>
+        <div className={`${modalStyles.notificationModal} ${modalStyles.centre}`}>
+            <div className={modalStyles.smallModalHeader}>
+                <h5 className={modalStyles.smallHeading}>
+                    {modalTitle}
+                </h5>
+                <button className={modalStyles.smallHeaderClose} onClick={() => setOpen(false)}>
+                    Close
+                </button>
+            </div>
+            <div className={modalStyles.smallModalContent}>
+                {children}
+            </div>
+            <div className={modalStyles.modalFooter}>
+                <ModalButton setOpen={setOpen} action={"cancel"}/>
+            </div>
+        </div>
+    </>)
+};

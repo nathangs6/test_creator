@@ -1,72 +1,97 @@
 import { useState, useEffect, useContext } from 'react';
-import { NewQuestion, QuestionList } from '../../components/lists/questionList.js';
-import { NewSubCollectionForm, RenameSubCollectionForm, DeleteSubCollectionForm } from '../../components/modals/subCollectionForms.js';
-import { SubCollectionContext } from '../../context/SubCollectionContext.js';
-import { QuestionContextProvider } from '../../context/QuestionContext.js';
 import API from '../../apis/api.js';
+import { SubCollectionContext } from '../../context/SubCollectionContext.js';
+import { NewSubCollectionForm, RenameSubCollectionForm, DeleteSubCollectionForm } from '../../components/forms/subCollectionForms.js';
+import { QuestionContextProvider } from '../../context/QuestionContext.js';
+import { NewQuestion, QuestionList } from '../../components/lists/questionList.js';
+import listStyles from './list.module.css';
+import buttonStyles from '../buttons.module.css';
 
-export function NewSubCollection(props) {
+export function NewSubCollection({ collectionID, collectionName }) {
     const [isOpen, setOpen] = useState(false);
     return (<>
-        <button type="button" onClick={() => setOpen(true)}>New Subcollection</button>
-        {isOpen && <NewSubCollectionForm setOpen={setOpen} collectionID={props.id} collectionName={props.name}/>}
+        <div className={listStyles.newSubCollection}>
+            <button type="button" onClick={() => setOpen(true)} className={[listStyles.maxWidth, buttonStyles.listNew].join(" ")}>New Subcollection</button>
+        </div>
+        {isOpen && <NewSubCollectionForm setOpen={setOpen} collectionID={collectionID} collectionName={collectionName}/>}
     </>);
 };
 
-function RenameSubCollection(props) {
+function RenameSubCollection({ id, name }) {
     const [isOpen, setOpen] = useState(false);
     const subCollectionData = {
-        id: props.id,
-        name: props.name
+        id: id,
+        name: name
     }
     return (<>
-        <button type="button" onClick={() => setOpen(true)}>Rename</button>
+        <button type="button" onClick={() => setOpen(true)} className={buttonStyles.listEdit}>Rename</button>
         {isOpen && <RenameSubCollectionForm setOpen={setOpen} subCollectionData={subCollectionData}/>}
     </>)
 }
 
-function DeleteSubCollection(props) {
+function DeleteSubCollection({ id, name }) {
     const [isOpen, setOpen] = useState(false);
     const subCollectionData = {
-        id: props.id,
-        name: props.name
+        id: id,
+        name: name
     };
     return (<>
-        <button onClick={() => setOpen(true)}>Delete</button>
+        <button onClick={() => setOpen(true)} className={buttonStyles.listDelete}>Delete</button>
         {isOpen && <DeleteSubCollectionForm setOpen={setOpen} subCollectionData={subCollectionData}/>}
     </>)
 }
 
-export function SubCollectionListItem(id, name, username, handleChange) {
+function SubCollectionListItem({ id, name, username, handleChange }) {
+    const [questionView, setQuestionView] = useState(false);
+    const changeView = () => {
+        if (questionView === false) {
+            setQuestionView(true);
+        } else {
+            setQuestionView(false);
+        }
+    }
+
     return (
         <li key={id}>
-            <input 
-                form="generate-form"
-                type="number" 
-                min="0" 
-                defaultValue="0" 
-                name={"subCollectionCount" + id}
-                step="1" 
-                onChange={e => handleChange(e)}
-                style={{width: "3em"}}/> {name}&nbsp;&nbsp;
-            <RenameSubCollection id={id} name={name}/>&nbsp;&nbsp;
-            <DeleteSubCollection id={id} name={name}/>&nbsp;&nbsp;
             <QuestionContextProvider>
-                <NewQuestion username={username} id={id} name={name}/>&nbsp;&nbsp;
-                <button type="button">Show Questions</button>
-                <QuestionList subCollectionID={id} name={name}/>
+                <div className={listStyles.subCollectionListItem}>
+                    <input 
+                        form="generate-form"
+                        type="number" 
+                        min="0" 
+                        defaultValue="0" 
+                        name={"subCollectionCount" + id}
+                        step="1" 
+                        onChange={e => handleChange(e)}
+                        className={listStyles.counterInput}/>
+                    <span className={listStyles.expandElement}>{name}</span>
+                    <RenameSubCollection id={id} name={name}/>
+                    <DeleteSubCollection id={id} name={name}/>
+                    <button type="button" onClick={() => changeView()} className={buttonStyles.listOther}>Show Questions</button>
+                </div>
+                {questionView && <QuestionList username={username} subCollectionID={id} subCollectionName={name} id={"questionList" + id}/>}
             </QuestionContextProvider>
         </li>
     )
 }
 
-export function SubCollectionList(props) {
+function hide(subCollectionID) {
+    var elementID = "questionList" + subCollectionID
+    var questionListElement = document.getElementById(elementID);
+    if (questionListElement.style.display === "none") {
+        questionListElement.style.display = "block";
+    } else {
+        questionListElement.style.display = "none";
+    }
+}
+
+export function SubCollectionList({ collectionID, collectionName, username, handleChange }) {
     const {subCollections, setSubCollections} = useContext(SubCollectionContext);
     useEffect(() => {
         try {
             const fetchSubCollections = async () => {
-                console.log("Fetching subcollections for collection " + props.collectionID + "!");
-                const response = await API.get("/subcollection/"+props.collectionID);
+                console.log("Fetching subcollections for collection " + collectionID + "!");
+                const response = await API.get("/subcollection/"+collectionID);
                 setSubCollections(response.data.data.subCollectionData);
             }
             fetchSubCollections();
@@ -74,15 +99,11 @@ export function SubCollectionList(props) {
             console.log(err)
         };
     },[]);
-    if (Object.keys(subCollections).length === 0) {
-        return ;
-    };
-    return (
-        <ul>
-            {subCollections.map(({ id, name, questions }) => {
-                return SubCollectionListItem(id, name, props.username, props.handleChange)
-            })}
-        </ul>
-    )
+
+    return (<ul>{subCollections && subCollections.map(({ id, name, questions }) => {
+                return <SubCollectionListItem key={id} id={id} name={name} username={username} handleChange={handleChange}/>
+        })}
+        <li><NewSubCollection collectionID={collectionID} collectionName={collectionName}/></li>
+    </ul>);
 }
 

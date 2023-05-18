@@ -1,6 +1,6 @@
 import { useState, useContext } from 'react';
 import API from '../../apis/api.js';
-import { SmallModal } from './modal.js';
+import { SmallModal } from '../modals/modal.js';
 import { CollectionContext } from '../../context/CollectionContext.js';
 
 export function NewCollectionForm({ setOpen, username }) {

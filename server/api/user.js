@@ -3,36 +3,9 @@ const express = require("express");
 const db = require("../db");
 const router = express.Router();
 const { getUserID, verifyLogin } = require("./scripts/user.js");
-const { getUserPresets } = require("./scripts/preset.js");
-const { getUserCollections } = require("./scripts/collection.js");
-const { getCollectionSubCollections } = require("./scripts/subcollection.js");
-const { getSubCollectionQuestions } = require("./scripts/question.js");
 const { renameKey } = require("./scripts/formatData.js");
 
 // define routes
-router.get("/:username", async function (req, res) {
-    // Function that retrieves all user data for the main page
-    username = req.params.username;
-    console.log(username);
-
-    loginResult = "success";
-    if (loginResult === "fail") {
-        res.status(401).json({
-            status: "failed",
-            data: {result: "User does not exist"}
-        });
-        return 0;
-    };
-
-    userID = await getUserID(username);
-
-    res.status(200).json({
-        status: "success",
-        data: {
-        }
-    });
-});
-
 router.post("/login", async (req, res) => {
     inputtedUsername = req.body.username;
     inputtedPassword = req.body.password;
@@ -88,6 +61,51 @@ router.post("/changepassword/:username", async (req, res) => {
         status: "success",
         data: {result: "Password successfully changed"}
     });
+});
+
+router.post("/create", async (req, res) => {
+    const username = req.body.username;
+    const password = req.body.password;
+    const confirmPassword = req.body.confirmPassword;
+    console.log(username);
+
+    const usernameExists = await getUserID(username);
+    console.log(usernameExists);
+
+    if (usernameExists != false) {
+        res.status(401).json({
+            status: "fail",
+            data: {
+                result: "Username already exists!"
+            }
+        });
+        return res;
+    };
+
+    if (password !== confirmPassword) {
+        res.status(401).json({
+            status: "fail",
+            data: {
+                result: "Passwords do not match!"
+            }
+        });
+        return res;
+    };
+
+    const results = await db.query(
+        "INSERT INTO UserAccount " + 
+        "(Username, Password) " + 
+        "VALUES ($1, $2)",
+        [username, password]
+    );
+
+    res.status(200).json({
+        status: "success",
+        data: {
+            result: "Account created!"
+        }
+    });
+    return res;
 });
 
 module.exports = router;

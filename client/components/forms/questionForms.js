@@ -1,8 +1,8 @@
 import { useState, useContext } from 'react';
 import API from '../../apis/api.js';
-import { BigModal, SmallModal } from './modal.js';
 import { QuestionContext } from '../../context/QuestionContext.js';
-import modalStyles from './modal.module.css';
+import { BigModal, SmallModal } from '../modals/modal.js';
+import modalStyles from '../modals/modal.module.css';
 
 function QuestionModal({ setOpen, modalTitle, handleSubmit, questionData }) {
     return (<BigModal setOpen={setOpen} modalTitle={modalTitle} handleSubmit={handleSubmit} action="confirm">

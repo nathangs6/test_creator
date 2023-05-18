@@ -37,13 +37,12 @@ async function getUserID(username) {
         );
         userIDNotFound = results.rowCount === 0;
         if (userIDNotFound) {
-            return null;
+            return false;
         }
         return results.rows[0].useraccountid;
     } catch(err) {
         console.log(err)
     }
 };
-
 
 module.exports = { getUserID, verifyLogin };

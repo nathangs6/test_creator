@@ -1,7 +1,7 @@
 import { useState, useContext } from 'react';
 import API from '../../apis/api.js';
-import { SmallModal } from './modal.js';
 import { SubCollectionContext } from '../../context/SubCollectionContext.js';
+import { SmallModal } from '../modals/modal.js';
 
 export function NewSubCollectionForm({ setOpen, collectionID, collectionName }) {
     const { addSubCollection } = useContext(SubCollectionContext);

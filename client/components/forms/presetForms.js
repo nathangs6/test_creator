@@ -1,8 +1,8 @@
 import { useState, useContext } from 'react';
 import API from '../../apis/api.js';
-import { BigModal, SmallModal } from './modal.js';
+import { BigModal, SmallModal } from '../modals/modal.js';
 import { PresetContext } from '../../context/PresetContext.js';
-import modalStyles from './modal.module.css';
+import modalStyles from '../modals/modal.module.css';
 
 function PresetModal({ setOpen, modalTitle, handleSubmit, presetData }) {
     return (<BigModal setOpen={setOpen} modalTitle={modalTitle} handleSubmit={handleSubmit} action="confirm">

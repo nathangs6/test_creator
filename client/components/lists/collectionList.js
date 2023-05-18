@@ -1,62 +1,66 @@
 import { useState, useEffect, useContext } from 'react';
-import { NewSubCollection, SubCollectionList } from '../../components/lists/subCollectionList.js';
-import { NewCollectionForm, RenameCollectionForm, DeleteCollectionForm } from '../../components/modals/collectionModals.js';
-import { CollectionContext } from '../../context/CollectionContext.js';
-import { SubCollectionContextProvider } from '../../context/SubCollectionContext.js';
 import API from '../../apis/api.js';
+import { CollectionContext } from '../../context/CollectionContext.js';
+import { NewCollectionForm, RenameCollectionForm, DeleteCollectionForm } from '../forms/collectionForms.js';
+import { SubCollectionContextProvider } from '../../context/SubCollectionContext.js';
+import { NewSubCollection, SubCollectionList } from '../../components/lists/subCollectionList.js';
+import listStyles from './list.module.css';
+import buttonStyles from '../buttons.module.css';
 
 export function NewCollection({ username }) {
     const [isOpen, setOpen] = useState(false);
     return (<>
-        <button type="button" onClick={() => setOpen(true)}>New Collection</button>
+        <button type="button" onClick={() => setOpen(true)} className={[listStyles.newCollectionButton, buttonStyles.listNew].join(" ")}>New Collection</button>
         {isOpen && <NewCollectionForm setOpen={setOpen} username={username}/>}
     </>);
 };
 
-function RenameCollection(props, collectionOwner, collectionID, collectionName) {
+function RenameCollection({ username, id, name }) {
     const [isOpen, setOpen] = useState(false);
     const collectionData = {
-        owner: props.username,
-        id: props.id,
-        name: props.name
+        owner: username,
+        id: id,
+        name: name
     }
     return (<>
-        <button type="button" onClick={() => setOpen(true)}>Rename</button>
+        <button type="button" onClick={() => setOpen(true)} className={buttonStyles.listEdit}>Rename</button>
         {isOpen && <RenameCollectionForm setOpen={setOpen} collectionData={collectionData}/>}
     </>);
 };
 
-function DeleteCollection(props, username, collectionID, collectionName) {
+function DeleteCollection({ username, id, name }) {
     const [isOpen, setOpen] = useState(false);
     const collectionData = {
-        owner: props.username,
-        id: props.id,
-        name: props.name
+        owner: username,
+        id: id,
+        name: name
     };
     return (<>
-        <button onClick={() => setOpen(true)}>Delete</button>
+        <button onClick={() => setOpen(true)} className={buttonStyles.listDelete}>Delete</button>
         {isOpen && <DeleteCollectionForm setOpen={setOpen} collectionData={collectionData}/>}
     </>);
 };
-export function CollectionListItem(id, name, username, handleChange) {
+function CollectionListItem({ id, name, username, handleChange }) {
     return (
-        <li key={id}>{name}&nbsp;&nbsp;
-            <RenameCollection username={username} id={id} name={name}/>&nbsp;
-            <DeleteCollection username={username} id={id} name={name}/>&nbsp;
+        <li key={id}>
             <SubCollectionContextProvider>
-                <NewSubCollection id={id} name={name}/>
-                <SubCollectionList collectionID={id} username={username} handleChange={handleChange}/>
+                <div className={listStyles.collectionListItem}>
+                    <span className={listStyles.expandElement}>{name}</span>
+                    <RenameCollection username={username} id={id} name={name} className={listStyles.fixedItem}/>&nbsp;
+                    <DeleteCollection username={username} id={id} name={name} className={listStyles.fixedItem}/>&nbsp;
+                </div>
+                <SubCollectionList collectionID={id} collectionName={name} username={username} handleChange={handleChange}/>
             </SubCollectionContextProvider>
         </li>
     );
 }
 
-export function CollectionList(props) {
+export function CollectionList({ username, handleChange }) {
     const {collections, setCollections} = useContext(CollectionContext);
     useEffect(() => {
         try {
             const fetchCollections = async () => {
-                const response = await API.get("/collection/"+props.username);
+                const response = await API.get("/collection/"+username);
                 setCollections(response.data.data.collectionData);
             }
             fetchCollections();
@@ -64,15 +68,13 @@ export function CollectionList(props) {
             console.log(err);
         };
     },[]);
-    if (Object.keys(collections).length === 0) {
-        return ;
-    };
-    return (
+    return (<>{collections &&
         <ul>
             {collections.map(({ id, name }) => {
-                return CollectionListItem(id, name, props.username, props.handleChange)
+                return <CollectionListItem key={id} id={id} name={name} username={username} handleChange={handleChange}/>
             })}
+            <li><NewCollection username={username}/></li>
         </ul>
-    );
+        }</>);
 };
 

@@ -1,28 +1,32 @@
 import { useState, useEffect, useContext } from 'react';
-import { NewQuestionForm, EditQuestionForm, DeleteQuestionForm } from '../../components/modals/questionModals.js';
-import { QuestionContext } from '../../context/QuestionContext.js';
 import API from '../../apis/api.js';
+import { QuestionContext } from '../../context/QuestionContext.js';
+import { NewQuestionForm, EditQuestionForm, DeleteQuestionForm } from '../../components/forms/questionForms.js';
+import listStyles from './list.module.css';
+import buttonStyles from '../buttons.module.css';
 
-export function NewQuestion(props) {
+export function NewQuestion({ username, subCollectionID, subCollectionName }) {
     const [isOpen, setOpen] = useState(false);
 
     return (<>
-        <button type="button" onClick={() => setOpen(true)}>New Question</button>
-        {isOpen && <NewQuestionForm setOpen={setOpen} username={props.username} subCollectionID={props.id} subCollectionName={props.name}/>}
+        <div className={listStyles.newQuestion}>
+            <button type="button" onClick={() => setOpen(true)} className={[listStyles.maxWidth, buttonStyles.listNew].join(" ")}>New Question</button>
+        </div>
+        {isOpen && <NewQuestionForm setOpen={setOpen} username={username} subCollectionID={subCollectionID} subCollectionName={subCollectionName}/>}
     </>);
 };
 
-function EditQuestion(props) {
+function EditQuestion({ owner, id, name, content, source }) {
     const [isOpen, setOpen] = useState(false);
     const currentData = {
-        owner: props.owner,
-        id: props.id,
-        name: props.name,
-        content: props.content,
-        source: props.source
+        owner: owner,
+        id: id,
+        name: name,
+        content: content,
+        source: source
     };
     return (<>
-        <button onClick={() => setOpen(true)}>Edit</button>
+        <button onClick={() => setOpen(true)} className={buttonStyles.listEdit}>Edit</button>
         {isOpen && <EditQuestionForm setOpen={setOpen} currentData={currentData}/>}
     </>);
 };
@@ -34,21 +38,22 @@ function DeleteQuestion({ ownerID, questionID, questionName }) {
         name: questionName
     };
     return (<>
-        <button onClick={() => setOpen(true)}>Delete</button>
+        <button onClick={() => setOpen(true)} className={buttonStyles.listDelete}>Delete</button>
         {isOpen && <DeleteQuestionForm setOpen={setOpen} subCollectionID={ownerID} questionData={questionData}/>}
     </>);
 };
 
-export function QuestionListItem(id, name, content, source, subCollectionID, subCollectionName) {
+function QuestionListItem({ id, name, content, source, subCollectionID, subCollectionName }) {
     return (
-        <li key={id}>{name} &nbsp;&nbsp; 
-            <EditQuestion owner={subCollectionName} id={id} name={name} content={content} source={source}/>&nbsp;&nbsp;
-            <DeleteQuestion ownerID={subCollectionID} questionID={id} questionName={name}/>
+        <li key={id} className={listStyles.questionListItem}>
+            <span className={listStyles.expandElement}>{name}</span> 
+            <EditQuestion owner={subCollectionName} id={id} name={name} content={content} source={source} className={listStyles.fixedElement}/>&nbsp;&nbsp;
+            <DeleteQuestion ownerID={subCollectionID} questionID={id} questionName={name} className={listStyles.fixedElement}/>
         </li>
     )
 }
 
-export function QuestionList({subCollectionID, subCollectionName}) {
+export function QuestionList({ username, subCollectionID, subCollectionName }) {
     const {questions, setQuestions} = useContext(QuestionContext);
     useEffect(() => {
         try {
@@ -62,16 +67,11 @@ export function QuestionList({subCollectionID, subCollectionName}) {
             console.log(err);
         };
     }, []);
-    if (Object.keys(questions).length === 0) {
-        return ;
-    };
-    return (
-        <ul>
-            {questions.map(({ id, name, content, source }) => {
-                return QuestionListItem(id, name, content, source, subCollectionID, subCollectionName)
-            }
-            )}
-        </ul>
-    );
+    return (<ul>
+        {questions && questions.map(({ id, name, content, source }) => {
+            return <QuestionListItem key={id} id={id} name={name} content={content} source={source} subCollectionID={subCollectionID} subCollectionName={subCollectionName}/>
+        })}
+        <li><NewQuestion username={username} subCollectionID={subCollectionID} subCollectionName={subCollectionName}/></li>
+    </ul>);
 };
 

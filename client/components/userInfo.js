@@ -1,3 +1,6 @@
+import utilStyles from '../styles/utils.module.css';
+import buttonStyles from './buttons.module.css';
+
 function UserInfo(username) { 
     return (
         <section>
@@ -9,6 +12,7 @@ function UserInfo(username) {
                     id="oldPassword" 
                     name="oldPassword" 
                     placeholder="old password" 
+                    className={utilStyles.textInput}
                     required
                 /><br/>
                 <label htmlFor="newPassword">Enter new password: </label>
@@ -17,6 +21,7 @@ function UserInfo(username) {
                     id="newPassword" 
                     name="newPassword" 
                     placeholder="new password"
+                    className={utilStyles.textInput}
                     required
                 /><br/>
                 <label htmlFor="confirmPassword">Confirm new password: </label>
@@ -25,9 +30,10 @@ function UserInfo(username) {
                     id="confirmPassword" 
                     name="confirmPassword" 
                     placeholder="confirm password"
+                    className={utilStyles.textInput}
                     required
                 /><br/>
-                <input type="submit" value="Change Password"/>
+                <input type="submit" value="Change Password" className={buttonStyles.listEdit}/>
             </form>
         </section>
     );

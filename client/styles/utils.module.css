@@ -5,3 +5,70 @@
 .centre img {
     border-radius: 50%;
 }
+
+.textInput {
+    background-color: #3c3836;
+    border: solid 1px #928374;
+    color: #ebdbb2;
+    outline: none;
+}
+
+.radioContainer {
+    display: block;
+    position: relative;
+    cursor: pointer;
+    padding: 0;
+    height: 1rem;
+    width: 1rem;
+    font-size: 22px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.radioInput {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.radioSelected {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 1rem;
+    width: 1rem;
+    background-color: #a89984;
+    border-radius: 50%;
+}
+
+.radioContainer:hover .radioInput ~ .radioSelected {
+    background-color: #458588;
+}
+
+.radioContainer .radioInput:checked ~ .radioSelected {
+    background-color: #458588;
+}
+
+.radioSelected:after {
+    content: "";
+    position: absolute;
+    display: none;
+    margin: 0;
+}
+
+.radioContainer .radioInput:checked ~ .radioSelected:after {
+    display: block;
+}
+
+.radioContainer .radioSelected:after {
+    top: 50%;
+    left: 50%;
+    width: 0.6rem;
+    height: 0.6rem;
+    margin: -0.3rem 0 0 -0.3rem;
+    border-radius: 50%;
+    background: #ebdbb2;
+}
