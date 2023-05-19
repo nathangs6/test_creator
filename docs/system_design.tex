@@ -42,12 +42,22 @@ Note: Because of the above note, we must reference all columns with lowercase in
 We will have the following data model:
 
 \begin{figure}[h!]
-    \begin{subfigure}{\textwidth}
+    \begin{subfigure}{0.4\textwidth}
         \begin{tabular}{|c|c|c|}
             \hline
             \multicolumn{3}{|c|}{UserAccount} \\
             \hline
             UserAccountID & Username & Password \\
+            \hline
+        \end{tabular}
+        \vspace*{2em}
+    \end{subfigure}
+    \begin{subfigure}{0.6\textwidth}
+        \begin{tabular}{|c|c|c|c|c|}
+            \hline
+            \multicolumn{5}{|c|}{ClientAuthentication} \\
+            \hline
+            ClientID & LastLogin & RefreshToken & RefreshTokenExpiry & UserAccountID (FK) \\
             \hline
         \end{tabular}
         \vspace*{2em}

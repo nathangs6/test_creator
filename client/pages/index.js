@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
 import API from '../apis/api.js';
+import AuthAPI from '../apis/authAPI.js';
 import Layout from '../components/layout.js';
 import { NotificationModal } from '../components/modals/modal.js';
 import utilStyles from '../styles/utils.module.css';
@@ -24,7 +25,7 @@ export default function Home() {
     const handleLoginSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await API.post("/user/login", loginData);
+            const response = await AuthAPI.post("/login", loginData);
             window.location.href = '/users/'+loginData.username;
         } catch(err) {
             setLoginFailModal(true);
@@ -84,7 +85,7 @@ export default function Home() {
                 /><br/>
                 <label htmlFor="password-input">Password: </label>
                 <input 
-                    type="text"
+                    type="password"
                     name="password"
                     placeholder="password"
                     value={loginData.password}
@@ -111,7 +112,7 @@ export default function Home() {
                 /><br/>
                 <label htmlFor="password-input">Password: </label>
                 <input 
-                    type="text"
+                    type="password"
                     name="password"
                     placeholder="password"
                     value={createData.password}
@@ -120,7 +121,7 @@ export default function Home() {
                 /><br/>
                 <label htmlFor="password-input">Confirm Password: </label>
                 <input 
-                    type="text"
+                    type="password"
                     name="confirmPassword"
                     placeholder="password"
                     value={createData.confirmPassword}

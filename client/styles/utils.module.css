@@ -1,9 +1,21 @@
+.centreElement {
+    margin: auto;
+}
+
 .centre {
     text-align: center;
 }
 
 .centre img {
     border-radius: 50%;
+}
+
+.noMargin {
+    margin: 0;
+}
+
+.sectionHeader {
+    margin-bottom: 0;
 }
 
 .textInput {
@@ -14,7 +26,7 @@
 }
 
 .radioContainer {
-    display: block;
+    display: inline-block;
     position: relative;
     cursor: pointer;
     padding: 0;

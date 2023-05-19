@@ -1,3 +1,20 @@
+.presetListItem {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    height: 2em;
+    gap: 5px;
+}
+
+.newPresetButton {
+    width: 100%;
+}
+
+.collectionList {
+    border-left: solid 1px grey;
+}
+
 .collectionListItem {
     width: 100%;
     display: flex;
@@ -19,6 +36,10 @@
 .fixedElement {
     flex: 0 0;
     height: 1em;
+}
+
+.subCollectionList {
+    border: solid 1px grey;
 }
 
 .subCollectionListItem {

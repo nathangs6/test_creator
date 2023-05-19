@@ -4,6 +4,7 @@ import { CollectionContext } from '../../context/CollectionContext.js';
 import { NewCollectionForm, RenameCollectionForm, DeleteCollectionForm } from '../forms/collectionForms.js';
 import { SubCollectionContextProvider } from '../../context/SubCollectionContext.js';
 import { NewSubCollection, SubCollectionList } from '../../components/lists/subCollectionList.js';
+import utilStyles from '../../styles/utils.module.css';
 import listStyles from './list.module.css';
 import buttonStyles from '../buttons.module.css';
 
@@ -68,13 +69,12 @@ export function CollectionList({ username, handleChange }) {
             console.log(err);
         };
     },[]);
-    return (<>{collections &&
-        <ul>
-            {collections.map(({ id, name }) => {
-                return <CollectionListItem key={id} id={id} name={name} username={username} handleChange={handleChange}/>
-            })}
-            <li><NewCollection username={username}/></li>
-        </ul>
-        }</>);
+    return (<ul className={utilStyles.noMargin}>
+        {collections &&
+                collections.map(({ id, name }) => {
+                    return <CollectionListItem key={id} id={id} name={name} username={username} handleChange={handleChange}/>
+                })}
+        <li><NewCollection username={username}/></li>
+    </ul>);
 };
 

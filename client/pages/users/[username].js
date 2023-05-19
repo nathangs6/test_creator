@@ -65,22 +65,23 @@ function UserPage() {
         <hr/>
         <section>
             <form onSubmit={e => GenerateTest(e)} id="generate-form"></form>
-            <h2>Generate Practice Test</h2>
-            <p>Select a preset and several subcollections to generate a test :)</p>
-            <h3>Select Preset</h3>
+            <h2 className={utilStyles.sectionHeader}>Generate Practice Test</h2>
+            <p className={utilStyles.noMargin}>Select a preset and several subcollections to generate a test :)</p>
+            <h3 className={utilStyles.sectionHeader}>Select Preset</h3>
             <PresetContextProvider>
-                <NewPreset username={username}/>
-                <div>
+                <div className={utilStyles.noMargin}>
                     <PresetList username={username} handleChange={handleChange}/>
                 </div>
             </PresetContextProvider>
-            <h3>Select Questions</h3>
-            <div>
+            <h3 className={utilStyles.sectionHeader}>Select Questions</h3>
+            <div className={utilStyles.noMargin}>
                 <CollectionContextProvider>
                     <CollectionList username={username} handleChange={handleChange}/>
                 </CollectionContextProvider>
             </div>
-            <input form="generate-form" type="submit" value="Generate Practice Test" className={buttonStyles.listOther}/>
+            <div className={[utilStyles.centre, buttonStyles.generateButtonContainer].join(" ")}>
+                <input form="generate-form" type="submit" value="Generate Practice Test" className={[buttonStyles.listOther, buttonStyles.generateButton].join(" ")}/>
+            </div>
         </section>
     </Layout>);
 }

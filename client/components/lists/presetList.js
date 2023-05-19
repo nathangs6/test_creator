@@ -9,7 +9,7 @@ import buttonStyles from '../buttons.module.css';
 export function NewPreset({username}) {
     const [isOpen, setOpen] = useState(false);
     return (<>
-        <button onClick={() => setOpen(true)} className={buttonStyles.listNew}>New Preset</button>
+        <button onClick={() => setOpen(true)} className={[buttonStyles.listNew, listStyles.newPresetButton].join(" ")}>New Preset</button>
         {isOpen && <NewPresetForm setOpen={setOpen} username={username}/>}
     </>);
 };
@@ -45,8 +45,8 @@ function DeletePreset({ username, id, name }) {
 
 function PresetListItem({ id, name, preamble, sep, postamble, username, handleChange }) {
     return (
-        <tr className={listStyles.listRow}>
-            <td>
+        <li>
+            <div className={listStyles.presetListItem}>
                 <div className={utilStyles.radioContainer}>
                     <input type="radio"
                         form="generate-form"
@@ -57,11 +57,11 @@ function PresetListItem({ id, name, preamble, sep, postamble, username, handleCh
                         required/>
                     <span className={utilStyles.radioSelected}></span>
                 </div>
-            </td>
-            <td>{name}</td>
-            <td><EditPreset username={username} id={id} name={name} preamble={preamble} sep={sep} postamble={postamble}/></td>
-            <td><DeletePreset username={username} id={id} name={name}/></td>
-        </tr>
+                <span className={listStyles.expandElement}>{name}</span>
+                <EditPreset username={username} id={id} name={name} preamble={preamble} sep={sep} postamble={postamble}/>
+                <DeletePreset username={username} id={id} name={name}/>
+            </div>
+        </li>
     );
 }
 
@@ -79,20 +79,11 @@ export function PresetList({ username, handleChange }) {
         };
     },[]);
 
-    return (<>
+    return (<ul className={utilStyles.noMargin}>
         {presets &&
-        <table key="preset-table">
-            <tbody key="preset-tbody">
-                <tr key="preset-heading">
-                    <th>Select</th>
-                    <th>Name</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
-                </tr>
-                {presets.map(({ id, name, preamble, sep, postamble }) => {
+                presets.map(({ id, name, preamble, sep, postamble }) => {
                     return <PresetListItem key={id} id={id} name={name} preamble={preamble} sep={sep} postamble={postamble} username={username} handleChange={handleChange}/>
                 })}
-            </tbody>
-        </table>
-        }</>);
+        <li><NewPreset username={username}/></li>
+    </ul>);
 };

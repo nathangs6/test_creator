@@ -3,6 +3,7 @@ const cors = require("cors");
 const express = require("express") // import the express app
 const db = require("./db"); // import the database files
 const bodyParser = require("body-parser");
+const jwt = require("jsonwebtoken");
 
 // import route modules
 const userRoutes = require("./api/user");

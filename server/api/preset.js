@@ -4,6 +4,7 @@ const db = require("../db");
 const { getUserID } = require("./scripts/user.js");
 const { getUserPresets} = require("./scripts/preset.js");
 const { renameKey } = require("./scripts/formatData.js");
+const { authenticateToken } = require("./scripts/authentication.js");
 const router = express.Router();
 
 // define routes
