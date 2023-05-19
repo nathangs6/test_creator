@@ -12,7 +12,7 @@ export function NewSubCollectionForm({ setOpen, collectionID, collectionName }) 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await API.post("/subcollection/new/"+collectionID, {newSubCollectionName: name});
+            const response = await API.post("/subcollection/"+collectionID, {newSubCollectionName: name});
             addSubCollection(response.data.data.subCollectionData);
             setOpen(false);
         } catch(err) {
@@ -40,7 +40,7 @@ export function RenameSubCollectionForm({ setOpen, subCollectionData }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const response = await API.post("/subcollection/rename/"+id, {newSubCollectionName: name});
+        const response = await API.put("/subcollection/"+id, {newSubCollectionName: name});
         updateSubCollection(response.data.data.subCollectionData);
         setOpen(false);
     };
@@ -62,7 +62,7 @@ export function DeleteSubCollectionForm({ setOpen, subCollectionData }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await API.post("/subcollection/delete/"+subCollectionData.id, {});
+        await API.delete("/subcollection/"+subCollectionData.id, {});
         deleteSubCollection(subCollectionData.id);
         setOpen(false);
     };

@@ -42,7 +42,7 @@ export function NewQuestionForm({ setOpen, username, subCollectionID, subCollect
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log("Adding question");
-        const response = await API.post("/question/new/" + username, {
+        const response = await API.post("/question/" + username, {
             newQuestionName: name,
             newQuestionContent: content,
             newQuestionSource: source,
@@ -70,7 +70,7 @@ export function EditQuestionForm({ setOpen, currentData }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const response = await API.post("/question/update/" + currentData.id, {
+        const response = await API.put("/question/" + currentData.id, {
             newQuestionName: name,
             newQuestionContent: content,
             newQuestionSource: source
@@ -95,7 +95,7 @@ export function DeleteQuestionForm({ setOpen, subCollectionID, questionData }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await API.post("/question/delete/" + questionData.id, {});
+        await API.delete("/question/" + questionData.id, {});
         deleteQuestion(questionData.id);
         setOpen(false);
     };
