@@ -1,7 +1,7 @@
 const db = require("../db");
 const { renameKey } = require("./formatData.js");
 
-export default class PresetModel() {
+class PresetModel {
     async getPresets(userID) {
         const presetQueryResults = await db.query(
             "SELECT PresetID, Name, Preamble, Sep, Postamble " + 
@@ -9,7 +9,7 @@ export default class PresetModel() {
             "WHERE UserAccountID = $1",
             [userID]
         );
-        presetsData = presetQueryResults.rows;
+        const presetsData = presetQueryResults.rows;
         for (var i = 0; i < presetsData.length; i++) {
             renameKey(presetsData[i], "presetid", "id");
         };
@@ -19,20 +19,28 @@ export default class PresetModel() {
     async createPreset(userID, name, preamble, sep, postamble) {
         const presetCreation = await db.query(
             "INSERT INTO Preset (Name, Preamble, Sep, Postamble, UserAccountID) " + 
-            "VALUES ($1, $2, $3, $4, $5) ",
+            "VALUES ($1, $2, $3, $4, $5) " + 
+            "RETURNING *",
             [name, preamble, sep, postamble, userID]
         );
+        const newPreset = presetCreation.rows[0];
+        renameKey(newPreset, "presetid", "id");
+        return newPreset;
     };
 
     async updatePreset(presetID, name, preamble, sep, postamble) {
-        await db.query(
+        const presetEdit = await db.query(
             "UPDATE Preset SET " +
-            "Name = $1" +
-            "Preamble = $2" + 
-            "Sep = $3" + 
-            "Postamble = $4" +
-            "WHERE PresetID = $5",
+            "Name = $1, " +
+            "Preamble = $2, " + 
+            "Sep = $3, " + 
+            "Postamble = $4 " +
+            "WHERE PresetID = $5 " + 
+            "RETURNING *",
             [name, preamble, sep, postamble, presetID]);
+        const updatedPreset  = presetEdit.rows[0];
+        renameKey(updatedPreset, "presetid", "id");
+        return updatedPreset;
     };
 
     async deletePreset(presetID) {
@@ -43,3 +51,5 @@ export default class PresetModel() {
         );
     };
 };
+
+module.exports = new PresetModel();

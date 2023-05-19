@@ -1,8 +1,8 @@
 const db = require("../db");
 const { renameKey } = require("./formatData.js");
 
-export default class QuestionModel() {
-    async getQuestions(subCollectionID) {
+class QuestionModel {
+    async getQuestionsInSubCollection(subCollectionID) {
         const subCollectionQuestions = await db.query(
             "SELECT Question.QuestionID, Question.Name, Content, Question.Source " + 
             "FROM Question " + 
@@ -11,21 +11,22 @@ export default class QuestionModel() {
             "WHERE JunctionSubCollectionQuestion.SubCollectionID = $1",
             [subCollectionID]
         );
-        questionData = subCollectionQuestions.rows;
+        const questionData = subCollectionQuestions.rows;
         for (var i = 0; i < questionData.length; i++) {
             renameKey(questionData[i], "questionid", "id");
         };
         return questionData;
     };
 
-    async createQuestion(username, subCollectionID, name, content, source) {
-        const newQuestion = await db.query(
+    async createQuestion(userID, subCollectionID, name, content, source) {
+        const newQuestionQuery = await db.query(
             "INSERT INTO Question (Name, Content, Source) " + 
             "VALUES ($1, $2, $3) " + 
             "RETURNING *",
             [name, content, source]
         );
-        newQuestionID = newQuestion.rows[0].questionid;
+        const newQuestion = newQuestionQuery.rows[0];
+        const newQuestionID = newQuestion.questionid;
 
         await db.query(
             "INSERT INTO JunctionUserAccountQuestion (UserAccountID, QuestionID) " + 
@@ -37,16 +38,23 @@ export default class QuestionModel() {
             "VALUES ($1, $2)",
             [subCollectionID, newQuestionID]
         );
+
+        renameKey(newQuestion, "questionid", "id");
+        return newQuestion;
     };
 
     async updateQuestion(questionID, name, content, source) {
-        await db.query(
+        const questionUpdate = await db.query(
             "UPDATE Question SET " +
-            "Name = $1 " + 
-            "Content = $2 " + 
+            "Name = $1, " + 
+            "Content = $2, " + 
             "Source = $3 " + 
-            "WHERE QuestionID = $4",
+            "WHERE QuestionID = $4 " +
+            "RETURNING *",
             [name, content, source, questionID]);
+        const updatedQuestion = questionUpdate.rows[0];
+        renameKey(updatedQuestion, "questionid", "id");
+        return updatedQuestion;
     };
 
     async deleteOrphanedQuestions() {
@@ -60,3 +68,5 @@ export default class QuestionModel() {
         );
     };
 };
+
+module.exports = new QuestionModel();

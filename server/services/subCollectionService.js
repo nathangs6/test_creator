@@ -1,18 +1,19 @@
 const SubCollectionModel = require("../models/subCollectionModel.js");
 const QuestionModel = require("../models/questionModel.js");
 
-export default class SubCollectionService() {
+class SubCollectionService {
     async getSubCollections(collectionID) {
         const subCollectionsData = await SubCollectionModel.getSubCollections(collectionID);
         return subCollectionsData;
     };
 
     async createSubCollection(collectionID, subCollectionName) {
-        await SubCollectionModel.createSubCollection(collectionID, subCollectionName);
+        const newSubCollection = await SubCollectionModel.createSubCollection(collectionID, subCollectionName);
+        return newSubCollection;
     };
 
     async renameSubCollection(subCollectionID, newName) {
-        await SubCollectionModel.renameSubCollection(subCollectionID, newName);
+        return await SubCollectionModel.renameSubCollection(subCollectionID, newName);
     };
 
     async deleteSubCollection(subCollectionID) {
@@ -20,3 +21,5 @@ export default class SubCollectionService() {
         await QuestionModel.deleteOrphanedQuestions();
     };
 };
+
+module.exports = new SubCollectionService();

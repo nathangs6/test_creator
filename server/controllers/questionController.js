@@ -1,7 +1,7 @@
 const UserService = require("../services/userService");
 const QuestionService = require("../services/questionService.js");
 
-export default class QuestionController() {
+class QuestionController {
     async getQuestions(req, res) {
     try {
         const subCollectionID = req.params.subCollectionID;
@@ -21,18 +21,23 @@ export default class QuestionController() {
         try {
             const username = req.params.username;
             const subCollectionID = req.body.subCollectionID;
-            const questionData = {
-                name = req.body.newQuestionName;
-                content = req.body.newQuestionContent;
-                source = req.body.newQuestionSource;
+            const newQuestionData = {
+                name: req.body.newQuestionName,
+                content: req.body.newQuestionContent,
+                source: req.body.newQuestionSource
             }
             const userID = await UserService.getUserID(username);
             if (!userID) {
                 res.sendStatus(401);
                 return null;
             };
-            await QuestionService.createQuestion(userID, subCollectionID, questionData);
-            res.sendStatus(200);
+            const questionData = await QuestionService.createQuestion(userID, subCollectionID, newQuestionData);
+            res.status(200).json({
+                data: {
+                    questionData
+                }
+            });
+            
         } catch(err) {
             console.log(err);
             res.sendStatus(400);
@@ -47,8 +52,13 @@ export default class QuestionController() {
                 content: req.body.newQuestionContent,
                 source: req.body.newQuestionSource
             };
-            await QuestionService.updateQuestion(questionID, updateData);
-            res.sendStatus(200);
+            const questionData = await QuestionService.updateQuestion(questionID, updateData);
+            res.status(200).json({
+                data: {
+                    questionData
+                }
+            });
+            
         } catch(err) {
             console.log(err);
             res.sendStatus(400);
@@ -66,3 +76,5 @@ export default class QuestionController() {
         };
     };
 };
+
+module.exports = new QuestionController();

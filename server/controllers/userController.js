@@ -1,6 +1,6 @@
 const UserService = require("../services/userService");
 
-export default class UserController() {
+class UserController {
     async login(req, res) {
         try {
             const username = req.body.username;
@@ -28,18 +28,21 @@ export default class UserController() {
             const oldPassword = req.body.oldPassword;
             const newPassword = req.body.newPassword;
             const confirmPassword = req.body.confirmPassword;
-
+            
             if (newPassword !== confirmPassword) {
                 res.sendStatus(403);
+                return null;
             }
 
             const user = await UserService.getUser(username);
             if (!user) {
                 res.sendStatus(403);
+                return null;
             };
 
             if (user.password !== oldPassword) {
                 res.sendStatus(403);
+                return null;
             };
 
             await UserService.changePassword(username, oldPassword, newPassword, confirmPassword);
@@ -59,10 +62,12 @@ export default class UserController() {
             const userExists = await UserService.userExists(username);
             if (userExists) {
                 res.sendStatus(401);
+                return null;
             };
 
             if (password !== confirmPassword) {
                 res.sendStatus(403);
+                return null;
             };
 
             await UserService.createUser(username, password, confirmPassword);
@@ -73,3 +78,5 @@ export default class UserController() {
         };
     };
 };
+
+module.exports = new UserController();

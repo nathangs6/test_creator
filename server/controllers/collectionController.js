@@ -1,7 +1,7 @@
 const UserService = require("../services/userService");
 const CollectionService = require("../services/collectionService");
 
-export default class CollectionController() {
+class CollectionController {
     async getCollections(req, res) {
         try {
             const username = req.params.username;
@@ -31,8 +31,13 @@ export default class CollectionController() {
                 res.sendStatus(401);
                 return null;
             }
-            await CollectionService.createCollection(userID, collectionName);
-            res.sendStatus(200);
+            const collectionData = await CollectionService.createCollection(userID, collectionName);
+            res.status(200).json({
+                data: {
+                    collectionData
+                }
+            });
+            
         } catch (err) {
             console.log(err);
             res.sendStatus(400);
@@ -43,8 +48,13 @@ export default class CollectionController() {
         try {
             const collectionID = req.params.collectionID;
             const newCollectionName = req.body.newCollectionName;
-            await CollectionModel.renameCollection(collectionID, newCollectionName);
-            res.sendStatus(200);
+            const collectionData = await CollectionService.renameCollection(collectionID, newCollectionName);
+            res.status(200).json({
+                data: {
+                    collectionData
+                }
+            });
+            
         } catch (err) {
             console.log(err);
             res.sendStatus(400);
@@ -62,3 +72,5 @@ export default class CollectionController() {
         };
     };
 };
+
+module.exports = new CollectionController();

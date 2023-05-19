@@ -1,7 +1,7 @@
 // collection.js - Collection route module
 // import modules
 const express = require("express");
-const CollectionController = require("../controllers/collectionController");
+const CollectionController = require("../../controllers/collectionController");
 
 // define constants
 const router = express.Router();

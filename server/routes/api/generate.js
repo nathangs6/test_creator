@@ -1,10 +1,9 @@
 const express = require("express");
-const db = require("../db");
-const { generateTest } = require("./scripts/generateTest.js");
-const { formatChoiceObject } = require("./scripts/formatData.js");
+const db = require("../../db");
+const { generateTest } = require("../scripts/generateTest.js");
 const router = express.Router();
 
-router.post("/:username", async (req, res) => {
+/*router.post("/:username", async (req, res) => {
     const username = req.params.username;
     const presetID = req.body.testSelection.presetSelection;
     var subCollectionChoices = req.body.testSelection;
@@ -66,4 +65,4 @@ router.post("/test", async (req, res) => {
     }
 });
 
-module.exports = router;
+module.exports = router;*/

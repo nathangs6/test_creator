@@ -1,20 +1,23 @@
-const UserService = require("../models/questionService.js");
 const PresetModel = require("../models/presetModel.js");
 
-export default class PresetService() {
+class PresetService {
     async getPresets(userID) {
         const presetData = await PresetModel.getPresets(userID);
+        return presetData;
     };
 
-    async createPreset(username, presetData) {
-        await PresetModel.createPreset(userID, presetData.name, presetData.preamble, presetData.sep, presetData.postamble);
+    async createPreset(userID, presetData) {
+        const newPreset = await PresetModel.createPreset(userID, presetData.name, presetData.preamble, presetData.sep, presetData.postamble);
+        return newPreset;
     };
 
     async updatePreset(presetID, updateData) {
-        await PresetModel.updatePreset(presetID, updateData.name, updateData.preamble, updateData.sep, updateData.postamble);
+        return await PresetModel.updatePreset(presetID, updateData.name, updateData.preamble, updateData.sep, updateData.postamble);
     };
 
     async deletePreset(presetID) {
         await PresetModel.deletePreset(presetID);
     };
 };
+
+module.exports = new PresetService();

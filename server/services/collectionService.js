@@ -1,21 +1,21 @@
-const UserService = require("./userService.js");
 const UserModel = require("../models/userModel.js");
 const CollectionModel = require("../models/collectionModel.js");
 const QuestionModel = require("../models/questionModel.js");
 
-export default class CollectionService() {
-    async getUserCollections(userID) {
+class CollectionService {
+    async getCollections(userID) {
         const collections = await CollectionModel.getCollections(userID);
         return collections
     };
     
     async createCollection(userID, collectionName) {
         const newCollection = await CollectionModel.createCollection(userID, collectionName);
-        await UserModel.addCollectionToUser(userID, newCollection.id)
+        await UserModel.addCollectionToUser(userID, newCollection.id);
+        return newCollection;
     };
 
     async renameCollection(collectionID, newCollectionName) {
-        await CollectionModel.renameCollection(collectionID, newCollectionName);
+        return await CollectionModel.renameCollection(collectionID, newCollectionName);
     };
 
     async deleteCollection(collectionID) {
@@ -23,3 +23,5 @@ export default class CollectionService() {
         await QuestionModel.deleteOrphanedQuestions();
     };
 };
+
+module.exports = new CollectionService();

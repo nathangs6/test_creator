@@ -1,7 +1,7 @@
 const db = require("../db");
 const { renameKey } = require("./formatData.js");
 
-export default class UserModel() {
+class UserModel {
     async getUser(username) {
             const results = await db.query(
                 "SELECT UserAccountID " + 
@@ -12,7 +12,7 @@ export default class UserModel() {
         if (results.rows.length === 0) {
             return null;
         };
-        user = results.rows[0];
+        const user = results.rows[0];
         renameKey(user, "useraccountid", "id");
         return user;
     };
@@ -35,4 +35,14 @@ export default class UserModel() {
             [newPassword, username]
         );
     };
+
+    async addCollectionToUser(userID, collectionID) {
+        await db.query(
+            "INSERT INTO JunctionUserAccountCollection (UserAccountID, CollectionID) " + 
+            "VALUES ($1, $2)", 
+            [userID, collectionID]
+        );
+    };
 };
+
+module.exports = new UserModel();

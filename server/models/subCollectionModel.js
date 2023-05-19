@@ -1,7 +1,7 @@
 const db = require("../db");
 const { renameKey } = require("./formatData.js");
 
-export default class SubCollectionModel() {
+class SubCollectionModel {
     async getSubCollections(collectionID) {
         const subCollectionQueryResults = await db.query(
             "SELECT SubCollectionID, Name " + 
@@ -9,7 +9,7 @@ export default class SubCollectionModel() {
             "WHERE CollectionID = $1",
             [collectionID]
         );
-        subCollectionsData = subCollectionQueryResults.rows;
+        const subCollectionsData = subCollectionQueryResults.rows;
         for (var i = 0; i < subCollectionsData.length; i++) {
             renameKey(subCollectionsData[i], "subcollectionid", "id");
         };
@@ -17,20 +17,28 @@ export default class SubCollectionModel() {
     };
 
     async createSubCollection(collectionID, subCollectionName) {
-        await db.query(
+        const subCollectionCreation = await db.query(
             "INSERT INTO SubCollection (Name, CollectionID) " + 
-            "VALUES ($1,$2) " + 
+            "VALUES ($1,$2) " +
+            "RETURNING *",
             [subCollectionName, collectionID]
         );
+        const newSubCollection = subCollectionCreation.rows[0];
+        renameKey(newSubCollection, "subcollectionid", "id");
+        return newSubCollection;
     };
 
     async renameSubCollection(subCollectionID, newName) {
-        await db.query(
+        const subCollectionRenamed = await db.query(
             "UPDATE SubCollection " + 
             "SET Name = $1 " + 
-            "WHERE SubCollectionID = $2 " + 
-            [newSubCollectionName, subCollectionID]
+            "WHERE SubCollectionID = $2 " +
+            "RETURNING *",
+            [newName, subCollectionID]
         );
+        const renamedSubCollection = subCollectionRenamed.rows[0];
+        renameKey(renamedSubCollection, "subcollectionid", "id");
+        return renamedSubCollection;
     };
 
     async deleteSubCollection(subCollectionID) {
@@ -41,3 +49,5 @@ export default class SubCollectionModel() {
         )
     };
 };
+
+module.exports = new SubCollectionModel();

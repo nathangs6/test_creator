@@ -1,18 +1,18 @@
-const UserService = require("../services/userService.js");
 const QuestionModel = require("../models/questionModel.js");
 
-export default class QuestionService() {
+class QuestionService {
     async getQuestions(subCollectionID) {
-        const questionData = await getQuestionsInSubCollection(subCollectionID);
+        const questionData = await QuestionModel.getQuestionsInSubCollection(subCollectionID);
         return questionData;
     };
 
     async createQuestion(userID, subCollectionID, questionData) {
-        await QuestionModel.createQuestion(userID, subCollectionID, questionData.name, questionData.content, questionData.source);
+        const newQuestion = await QuestionModel.createQuestion(userID, subCollectionID, questionData.name, questionData.content, questionData.source);
+        return newQuestion;
     };
 
     async updateQuestion(questionID, updateData) {
-        await QuestionModel.updateQuestion(questionID, updateData.name, updateData.content, updateData.source);
+        return await QuestionModel.updateQuestion(questionID, updateData.name, updateData.content, updateData.source);
     };
 
     async deleteOrphanedQuestions() {
@@ -22,3 +22,5 @@ export default class QuestionService() {
         await QuestionModel.deleteQuestion(questionID);
     };
 };
+
+module.exports = new QuestionService();

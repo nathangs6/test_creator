@@ -1,7 +1,7 @@
 const db = require("../db");
 const { renameKey } = require("./formatData.js");
 
-export default class CollectionModel() {
+class CollectionModel {
     async getCollections(userID) {
         const collectionQueryResults = await db.query(
             "SELECT Collection.CollectionID, Collection.Name " +
@@ -11,7 +11,7 @@ export default class CollectionModel() {
             "WHERE JunctionUserAccountCollection.UserAccountID = $1", 
             [userID]
         );
-        collectionData = collectionQueryResults.rows;
+        const collectionData = collectionQueryResults.rows;
         for (var i = 0; i < collectionData.length; i++) {
             renameKey(collectionData[i], "collectionid", "id");
         };
@@ -38,6 +38,9 @@ export default class CollectionModel() {
             "RETURNING *", 
             [newCollectionName, collectionID]
         );
+        const renamedCollection = collectionRenameResult.rows[0];
+        renameKey(renamedCollection, "collectionid", "id");
+        return renamedCollection;
     };
 
     async deleteCollection(collectionID) {
@@ -48,3 +51,5 @@ export default class CollectionModel() {
         );
     };
 };
+
+module.exports = new CollectionModel();

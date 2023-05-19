@@ -1,6 +1,6 @@
 const UserModel = require("../models/userModel.js");
 
-export default class UserService() {
+class UserService {
     async getUserID(username) {
         try {
             const user = await UserModel.getUser(username);
@@ -28,7 +28,7 @@ export default class UserService() {
     };
 
     async userExists(username) {
-        const user = getUser(username);
+        const user = await this.getUser(username);
         if (!user) {
             return false;
         };
@@ -43,3 +43,5 @@ export default class UserService() {
         await UserModel.changePassword(username, newPassword);
     };
 };
+
+module.exports = new UserService();

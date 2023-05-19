@@ -4,7 +4,7 @@ const logEvents = (msg) => {
 
 const logger = (req, res, next) => {
     const msg = `${req.method},${req.headers.origin},${req.url}`;
-    logEvents(req);
+    logEvents(msg);
     next();
 }
 

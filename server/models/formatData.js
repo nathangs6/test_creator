@@ -1,4 +1,4 @@
-export function renameKey(obj, oldKey, newKey) {
+function renameKey(obj, oldKey, newKey) {
     if (oldKey === newKey) {
         return ;
     }
@@ -6,3 +6,4 @@ export function renameKey(obj, oldKey, newKey) {
     delete obj[oldKey];
 };
 
+module.exports = { renameKey };

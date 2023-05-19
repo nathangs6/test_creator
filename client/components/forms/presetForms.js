@@ -58,14 +58,13 @@ export function NewPresetForm({ setOpen, username }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await API.post("/preset/new/"+owner, {
+            const response = await API.post("/preset/"+owner, {
                 newPresetName: name,
                 newPresetPreamble: preamble,
                 newPresetSep: sep,
                 newPresetPostamble: postamble
             });
-            console.log(response.data.data.newPreset);
-            addPreset(response.data.data.newPreset);
+            addPreset(response.data.data.presetData);
             setOpen(false);
         } catch(err) {
             console.log(err);
@@ -97,7 +96,7 @@ export function EditPresetForm({ setOpen, currentData }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await API.post("/preset/update/"+id, {
+            const response = await API.put("/preset/"+id, {
                 newPresetName: name,
                 newPresetPreamble: preamble,
                 newPresetSep: sep,
@@ -130,7 +129,7 @@ export function DeletePresetForm({ setOpen, presetData }) {
     const handleSubmit = async function (e) {
         e.preventDefault();
         try {
-            await API.post("/preset/delete/"+presetData.id, {});
+            await API.delete("/preset/"+presetData.id, {});
             deletePreset(presetData.id);
             setOpen(false);
         } catch(err) {

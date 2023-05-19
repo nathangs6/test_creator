@@ -1,6 +1,6 @@
 const SubCollectionService = require("../services/subCollectionService");
 
-export default class SubCollectionController() {
+class SubCollectionController {
     async getSubCollections(req, res) {
         try {
             const collectionID = req.params.collectionID;
@@ -20,8 +20,13 @@ export default class SubCollectionController() {
         try {
             const collectionID = req.params.collectionID;
             const subCollectionName = req.body.newSubCollectionName;
-            await SubCollectionService.createSubCollection(collectionID, subCollectionName);
-            res.sendStatus(200);
+            const subCollectionData = await SubCollectionService.createSubCollection(collectionID, subCollectionName);
+            res.status(200).json({
+                data: {
+                    subCollectionData
+                }
+            });
+            
         } catch (err) {
             console.log(err);
             res.sendStatus(400);
@@ -32,8 +37,13 @@ export default class SubCollectionController() {
         try {
             const subCollectionID = req.params.subCollectionID;
             const newSubCollectionName = req.body.newSubCollectionName;
-            await SubCollectionService.renameSubCollection(subCollectionID, newSubCollectionName);
-            res.sendStatus(200);
+            const subCollectionData = await SubCollectionService.renameSubCollection(subCollectionID, newSubCollectionName);
+            res.status(200).json({
+                data: {
+                    subCollectionData
+                }
+            });
+            
         } catch (err) {
             console.log(err);
             res.sendStatus(400);
@@ -43,7 +53,7 @@ export default class SubCollectionController() {
     async deleteSubCollection(req, res) {
         try {
             const subCollectionID = req.params.subCollectionID;
-            await SubCollectionService.deleteSubCollection(collectionID);
+            await SubCollectionService.deleteSubCollection(subCollectionID);
             res.sendStatus(200);
         } catch(err) {
             console.log(err);
@@ -51,3 +61,5 @@ export default class SubCollectionController() {
         };
     };
 };
+
+module.exports = new SubCollectionController();

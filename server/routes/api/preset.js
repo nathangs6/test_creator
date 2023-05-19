@@ -1,7 +1,7 @@
 // preset.js - Preset route module
 // import modules
 const express = require("express");
-const PresetController = require("../controllers/presetController");
+const PresetController = require("../../controllers/presetController");
 
 // define constants
 const router = express.Router();
