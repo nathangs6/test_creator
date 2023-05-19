@@ -1,15 +1,18 @@
+// import dependencies
 require("dotenv").config(); // use environment variables
 const cors = require("cors");
 const express = require("express") // import the express app
 const db = require("./db"); // import the database files
 const bodyParser = require("body-parser");
 const jwt = require("jsonwebtoken");
+const cookie = require("cookie-parser");
 const { getUserID, verifyLogin } = require("./api/scripts/user.js");
 const { userHasRefreshToken, validateRefreshToken, deleteRefreshToken, deleteRefreshTokenByID } = require("./api/scripts/authentication.js");
 
-// import route modules
-
+// define constants
 const app = express(); // create instance of express and store it in app
+const ACCESS_TOKEN_EXPIRY_TIME = 60 // this is in seconds
+const REFRESH_TOKEN_EXPIRY_TIME = 1 * 24 * 60 * 60 // this is in seconds
 
 // Use the express.json() middleware to allow reading req.body
 app.use(cors());
@@ -19,7 +22,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // helper functions
 
 function generateAccessToken(user) {
-    return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '15s'});
+    return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {expiresIn: ACCESS_TOKEN_EXPIRY_TIME });
 };
 
 async function generateRefreshToken(user, userID) {
@@ -27,7 +30,7 @@ async function generateRefreshToken(user, userID) {
     if (hasToken == true) {
         await deleteRefreshTokenByID(userID);
     }
-    return jwt.sign(user, process.env.REFRESH_TOKEN_SECRET);
+    return jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, { expiresIn: REFRESH_TOKEN_EXPIRY_TIME });
 };
 
 // Define routes
@@ -51,18 +54,13 @@ app.post('/login', async (req, res) => {
     const refreshToken = await generateRefreshToken(user, userID);
     const lastLoginDate = new Date();
     const refreshExpiryDate = new Date(lastLoginDate);
-    refreshExpiryDate.setDate(lastLoginDate.getDate() + 7);
+    refreshExpiryDate.setDate(lastLoginDate.getDate() + (REFRESH_TOKEN_EXPIRY_TIME / (60 * 60 * 24)));
     await db.query("INSERT INTO ClientAuthentication" +
                     "(LastLogin, RefreshToken, RefreshTokenExpiry, UserAccountID) " +
                     "VALUES ($1, $2, $3, $4)", [lastLoginDate.toISOString(), refreshToken, refreshExpiryDate.toISOString(), userID])
     console.log("Inserted!");
-    res.status(200).json({
-        status: "success",
-        data: {
-            accessToken,
-            refreshToken
-        }
-    });
+    res.cookie('jwt', refreshToken, { httpOnly: true, maxAge: REFRESH_TOKEN_EXPIRY_TIME * 1000 });
+    res.json({ accessToken });
 });
 
 app.post('/token', async (req, res) => {

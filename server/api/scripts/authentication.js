@@ -1,3 +1,4 @@
+require('dotenv').config();
 const db = require("../../db");
 const jwt = require("jsonwebtoken");
 
@@ -12,7 +13,7 @@ function authenticateToken(req, res, next) {
         if (err) {
             return res.sendStatus(403);
         }
-        req.user = user;
+        req.user = user.username;
         next();
     })
 }
