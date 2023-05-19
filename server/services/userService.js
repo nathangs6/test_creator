@@ -10,6 +10,7 @@ export default class UserService() {
             return user.id;
         } catch(err) {
             console.log(err)
+            return null;
         }
     };
 
@@ -22,45 +23,23 @@ export default class UserService() {
             return user;
         } catch(err) {
             console.log(err);
+            return null;
         };
+    };
 
-    async login(username, inputtedPassword) {
+    async userExists(username) {
         const user = getUser(username);
         if (!user) {
-            res.sendStatus(403);
-        }
-
-        if (user.password !== inputtedPassword) {
-            res.sendStatus(403);
+            return false;
         };
-
-        res.sendStatus(200);
+        return true;
     };
 
     async createUser(username, password, confirmPassword) {
-        if (password !== confirmPassword) {
-            return res.sendStatus(403);
-        }
-
-        usernameExists = getUserID(username);
-        if (usernameExists) {
-            return res.sendStatus(403);
-        }
-
         await UserModel.createUser(username, password);
-        res.sendStatus(200);
     };
 
     async changePassword(username, oldPassword, newPassword, confirmPassword) {
-        if (newPassword !== confirmPassword) {
-            return res.sendStatus(403);
-        }
-
-        loggedIn = await login(username, oldPassword);
-        if (!loggedIn) {
-            return res.sendStatus(403);
-        }
-
         await UserModel.changePassword(username, newPassword);
     };
 };
