@@ -1,5 +1,5 @@
 import { useState, useContext } from 'react';
-import API from '../../apis/api.js';
+import useAPIPrivate from '../../hooks/useAPIPrivate.js';
 import { QuestionContext } from '../../context/QuestionContext.js';
 import { BigModal, SmallModal } from '../modals/modal.js';
 import modalStyles from '../modals/modal.module.css';
@@ -34,6 +34,7 @@ function QuestionModal({ setOpen, modalTitle, handleSubmit, questionData }) {
 
 export function NewQuestionForm({ setOpen, username, subCollectionID, subCollectionName }) {
     const {addQuestion} = useContext(QuestionContext);
+    const API = useAPIPrivate();
     const modalTitle = "New Question";
     const [name, setName] = useState("");
     const [content, setContent] = useState("");
@@ -48,8 +49,10 @@ export function NewQuestionForm({ setOpen, username, subCollectionID, subCollect
             newQuestionSource: source,
             subCollectionID
         });
-        addQuestion(response.data.data.questionData);
-        setOpen(false);
+        if (response) {
+            addQuestion(response.data.data.questionData);
+            setOpen(false);
+        }
     };
 
     const questionData = {
@@ -63,6 +66,7 @@ export function NewQuestionForm({ setOpen, username, subCollectionID, subCollect
 
 export function EditQuestionForm({ setOpen, currentData }) {
     const {updateQuestion} = useContext(QuestionContext);
+    const API = useAPIPrivate();
     const modalTitle = "Edit Question";
     const [name, setName] = useState(currentData.name);
     const [content, setContent] = useState(currentData.content);
@@ -75,8 +79,10 @@ export function EditQuestionForm({ setOpen, currentData }) {
             newQuestionContent: content,
             newQuestionSource: source
         });
-        updateQuestion(response.data.data.questionData);
-        setOpen(false);
+        if (response) {
+            updateQuestion(response.data.data.questionData);
+            setOpen(false);
+        }
     };
 
     const questionData = {
@@ -91,13 +97,16 @@ export function EditQuestionForm({ setOpen, currentData }) {
 
 export function DeleteQuestionForm({ setOpen, subCollectionID, questionData }) {
     const {deleteQuestion} = useContext(QuestionContext);
+    const API = useAPIPrivate();
     const modalTitle = "Delete Question";
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await API.delete("/question/" + questionData.id, {});
-        deleteQuestion(questionData.id);
-        setOpen(false);
+        const response = await API.delete("/question/" + questionData.id, {});
+        if (response) {
+            deleteQuestion(questionData.id);
+            setOpen(false);
+        }
     };
 
     return (<SmallModal setOpen={setOpen} modalTitle={modalTitle} handleSubmit={handleSubmit} action="delete">

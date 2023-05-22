@@ -4,6 +4,8 @@ import Link from 'next/link';
 import styles from './layout.module.css';
 import Header from './header.js';
 import Footer from './footer.js';
+import { AuthorizationProvider } from '../context/AuthorizationContext';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 const name = 'Nathan';
 

@@ -1,5 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
-import API from '../../apis/api.js';
+import useAPIPrivate from '../../hooks/useAPIPrivate.js';
+//import API from '../../apis/api.js';
 import { PresetContext } from '../../context/PresetContext.js';
 import { NewPresetForm, EditPresetForm, DeletePresetForm } from '../forms/presetForms.js';
 import utilStyles from '../../styles/utils.module.css';
@@ -67,11 +68,14 @@ function PresetListItem({ id, name, preamble, sep, postamble, username, handleCh
 
 export function PresetList({ username, handleChange }) {
     const {presets, setPresets} = useContext(PresetContext);
+    const API = useAPIPrivate();
     useEffect(() => {
         try {
             const fetchPresets = async () => {
                 const response = await API.get("/preset/"+username);
-                setPresets(response.data.data.presetData);
+                if (response) {
+                    setPresets(response.data.data.presetData);
+                }
             }
             fetchPresets();
         } catch(err) {

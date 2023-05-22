@@ -21,8 +21,9 @@
     height: 80vh;
     z-index: 110;
     border-radius: 24px;
+    border: solid 20px #282828;
     box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.04);
-    background: #fcfcfc;
+    background: #282828;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -30,11 +31,12 @@
 
 .smallModal {
     width: 40vw;
-    height: 30vh;
+    height: 40vh;
     z-index: 110;
     border-radius: 24px;
+    border: solid 20px #282828;
     box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.04);
-    background: #fcfcfc;
+    background: #282828;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -45,8 +47,8 @@
     width: 100%;
     height: 3rem;
     border-radius: 8px 8px 0 0;
-    border-bottom: 2px solid black;
-    background-color: #bababa;
+    border-bottom: 2px solid #a89984;
+    background-color: #282828;
 }
 
 .smallModalHeader {
@@ -54,8 +56,8 @@
     width: 100%;
     height: 2.5rem;
     border-radius: 8px 8px 0 0;
-    border-bottom: 2px solid black;
-    background-color: #bababa;
+    border-bottom: 2px solid #a89984;
+    background-color: #282828;
 }
 
 .heading {
@@ -67,7 +69,7 @@
     text-align: center;
     font-size: 1.8rem;
     font-weight: 500;
-    color: black;
+    color: #ebdbb2;
 }
 
 .smallHeading {
@@ -77,7 +79,7 @@
     padding: 0;
     font-size: 1.2rem;
     font-weight: 500;
-    color: black;
+    color: #ebdbb2;
 }
 
 
@@ -92,6 +94,12 @@
     border: none;
     cursor: pointer;
     font-size: 1rem;
+    background-color: #a89984;
+    color: #282828;
+}
+
+.headerClose:hover {
+    background-color: #928374;
 }
 
 .smallHeaderClose {
@@ -105,13 +113,19 @@
     border: none;
     cursor: pointer;
     font-size: 1rem;
+    background-color: #a89984;
+    color: #282828;
+}
+
+.smallHeaderClose:hover {
+    background-color: #928374;
 }
 
 .modalContent {
     flex-grow: 1;
     width: 100%;
     overflow: auto;
-    background-color: #ababab;
+    background-color: #282828;
     font-size: 1.5rem;
 }
 
@@ -119,7 +133,7 @@
     flex-grow: 1;
     width: 100%;
     overflow: auto;
-    background-color: #ababab;
+    background-color: #282828;
     font-size: 1rem;
 }
 
@@ -128,13 +142,14 @@
     height: 3rem;
     width: 98%;
     border-radius: 0 0 8px 8px;
-    background-color: #bcbcbc;
+    background-color: #282828;
     padding: 0 1%;
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
     align-items: center;
     gap: 10px;
+    padding-top: 20px;
 }
 
 .largeTextarea {
@@ -144,6 +159,10 @@
     width: 95%;
     margin: 0 auto;
     resize: none;
+    background-color: #3c3836;
+    color: #ebdbb2;
+    outline: none;
+    border: none;
 }
 
 .mediumTextarea {
@@ -153,9 +172,18 @@
     width: 95%;
     margin: 0 auto;
     resize: none;
+    background-color: #3c3836;
+    color: #ebdbb2;
+    outline: none;
+    border: none;
 }
+
 .smallTextarea {
     display: block;
     margin: 0;
     margin-left: 2.5%;
+    background-color: #3c3836;
+    color: #ebdbb2;
+    outline: none;
+    border: none;
 }

@@ -4,11 +4,26 @@ const { renameKey } = require("./formatData.js");
 class UserModel {
     async getUser(username) {
             const results = await db.query(
-                "SELECT UserAccountID " + 
+                "SELECT * " + 
                 "FROM UserAccount " + 
                 "WHERE Username = $1",
                 [username]
             );
+        if (results.rows.length === 0) {
+            return null;
+        };
+        const user = results.rows[0];
+        renameKey(user, "useraccountid", "id");
+        return user;
+    };
+
+    async getUserByID(userID) {
+        const results = await db.query(
+            "SELECT * " + 
+            "FROM UserAccount " +
+            "WHERE UserAccountID = $1",
+            [userID]
+        );
         if (results.rows.length === 0) {
             return null;
         };

@@ -9,6 +9,8 @@ const cookie = require("cookie-parser");
 const { getUserID, verifyLogin } = require("./api/scripts/user.js");
 const { userHasRefreshToken, validateRefreshToken, deleteRefreshToken, deleteRefreshTokenByID } = require("./api/scripts/authentication.js");
 
+const authenticationRoutes = require("./routes/authentication");
+
 // define constants
 const app = express(); // create instance of express and store it in app
 const ACCESS_TOKEN_EXPIRY_TIME = 60 // this is in seconds
@@ -21,17 +23,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // helper functions
 
-function generateAccessToken(user) {
-    return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {expiresIn: ACCESS_TOKEN_EXPIRY_TIME });
-};
-
-async function generateRefreshToken(user, userID) {
-    const hasToken = await userHasRefreshToken(userID);
-    if (hasToken == true) {
-        await deleteRefreshTokenByID(userID);
-    }
-    return jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, { expiresIn: REFRESH_TOKEN_EXPIRY_TIME });
-};
 
 // Define routes
 app.post('/login', async (req, res) => {

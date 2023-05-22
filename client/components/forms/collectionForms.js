@@ -1,10 +1,12 @@
 import { useState, useContext } from 'react';
-import API from '../../apis/api.js';
+import useAPIPrivate from '../../hooks/useAPIPrivate.js';
 import { SmallModal } from '../modals/modal.js';
 import { CollectionContext } from '../../context/CollectionContext.js';
+import modalStyles from '../modals/modal.module.css';
 
 export function NewCollectionForm({ setOpen, username }) {
     const { addCollection } = useContext(CollectionContext);
+    const API = useAPIPrivate();
     const modalTitle = "New Collection";
     const [name, setName] = useState("Enter Name");
     const [id, setID] = useState(-1);
@@ -13,8 +15,10 @@ export function NewCollectionForm({ setOpen, username }) {
         e.preventDefault();
         try {
             const response = await API.post("/collection/"+username, {newCollectionName: name});
-            addCollection(response.data.data.collectionData);
-            setOpen(false);
+            if (response) {
+                addCollection(response.data.data.collectionData);
+                setOpen(false);
+            }
         } catch(err) {
             console.log(err);
         };
@@ -33,6 +37,7 @@ export function NewCollectionForm({ setOpen, username }) {
 
 export function RenameCollectionForm({ setOpen, collectionData }) {
     const {updateCollection} = useContext(CollectionContext);
+    const API = useAPIPrivate();
     const modalTitle = "Rename Collection";
     const [name, setName] = useState(collectionData.name);
     const [id, setID] = useState(collectionData.id);
@@ -40,14 +45,17 @@ export function RenameCollectionForm({ setOpen, collectionData }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const response = await API.put("/collection/"+id, {newCollectionName: name});
-        updateCollection(response.data.data.collectionData);
-        setOpen(false);
+        if (response) {
+            updateCollection(response.data.data.collectionData);
+            setOpen(false);
+        }
     };
 
     return (<SmallModal setOpen={setOpen} modalTitle={modalTitle} handleSubmit={handleSubmit} action="confirm">
         <label htmlFor="newCollectionName">New Collection Name: </label>
         <input
             type="text"
+            className={modalStyles.smallTextarea}
             name="newCollectionName"
             value={name}
             onChange={e => setName(e.target.value)}
@@ -57,13 +65,16 @@ export function RenameCollectionForm({ setOpen, collectionData }) {
 
 export function DeleteCollectionForm({ setOpen, collectionData }) {
     const {deleteCollection} = useContext(CollectionContext);
+    const API = useAPIPrivate();
     const modalTitle = "Delete Collection";
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await API.delete("/collection/"+collectionData.id, {});
-        deleteCollection(collectionData.id);
-        setOpen(false);
+        const response = await API.delete("/collection/"+collectionData.id, {});
+        if (response) {
+            deleteCollection(collectionData.id);
+            setOpen(false);
+        }
     };
     return (<SmallModal setOpen={setOpen} modalTitle={modalTitle} handleSubmit={handleSubmit} action="delete">
         Are you sure you want to delete collection {collectionData.name}?

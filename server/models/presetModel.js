@@ -16,6 +16,21 @@ class PresetModel {
         return presetsData;
     };
 
+    async getPreset(presetID) {
+        try {
+            const presetQuery = await db.query(
+                "SELECT * FROM Preset WHERE PresetID = $1",
+                [presetID]
+            );
+            const preset = presetQuery.rows[0];
+            renameKey(preset, "presetid", "id");
+            return preset;
+        } catch(err) {
+            console.log(err);
+            return null;
+        };
+    };
+
     async createPreset(userID, name, preamble, sep, postamble) {
         const presetCreation = await db.query(
             "INSERT INTO Preset (Name, Preamble, Sep, Postamble, UserAccountID) " + 

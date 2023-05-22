@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import API from '../../apis/api.js';
+import useAPIPrivate from '../../hooks/useAPIPrivate.js';
 import { QuestionContext } from '../../context/QuestionContext.js';
 import { NewQuestionForm, EditQuestionForm, DeleteQuestionForm } from '../../components/forms/questionForms.js';
 import listStyles from './list.module.css';
@@ -55,13 +55,15 @@ function QuestionListItem({ id, name, content, source, subCollectionID, subColle
 
 export function QuestionList({ username, subCollectionID, subCollectionName }) {
     const {questions, setQuestions} = useContext(QuestionContext);
+    const API = useAPIPrivate();
     useEffect(() => {
-        try {
-            const fetchQuestions = async () => {
-                console.log("Fetching questions for subcollection " + subCollectionID + "!");
-                const response = await API.get("/question/"+subCollectionID);
+        const fetchQuestions = async () => {
+            const response = await API.get("/question/"+subCollectionID);
+            if (response) {
                 setQuestions(response.data.data.questionData);
             }
+        }
+        try {
             fetchQuestions();
         } catch(err) {
             console.log(err);

@@ -2,6 +2,14 @@ const db = require("../db");
 const { renameKey } = require("./formatData.js");
 
 class QuestionModel {
+    async getQuestion(questionID) {
+        const query = await db.query(
+            "SELECT * FROM Question WHERE QuestionID=$1",
+            [questionID]);
+        const question = query.rows[0];
+        renameKey(question, "questionid", "id");
+        return question;
+    }
     async getQuestionsInSubCollection(subCollectionID) {
         const subCollectionQuestions = await db.query(
             "SELECT Question.QuestionID, Question.Name, Content, Question.Source " + 
@@ -17,6 +25,17 @@ class QuestionModel {
         };
         return questionData;
     };
+
+    async getQuestionIDsInSubCollection(subCollectionID) {
+        const query = await db.query(
+            "SELECT QuestionID " + 
+            "FROM JunctionSubCollectionQuestion " + 
+            "WHERE SubCollectionID = $1",
+            [subCollectionID]
+        );
+        const questionIDList = query.rows.map(({ questionid }) => questionid);
+        return questionIDList;
+    }
 
     async createQuestion(userID, subCollectionID, name, content, source) {
         const newQuestionQuery = await db.query(

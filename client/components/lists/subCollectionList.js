@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import API from '../../apis/api.js';
+import useAPIPrivate from '../../hooks/useAPIPrivate.js';
 import { SubCollectionContext } from '../../context/SubCollectionContext.js';
 import { NewSubCollectionForm, RenameSubCollectionForm, DeleteSubCollectionForm } from '../../components/forms/subCollectionForms.js';
 import { QuestionContextProvider } from '../../context/QuestionContext.js';
@@ -87,12 +87,14 @@ function hide(subCollectionID) {
 
 export function SubCollectionList({ collectionID, collectionName, username, handleChange }) {
     const {subCollections, setSubCollections} = useContext(SubCollectionContext);
+    const API = useAPIPrivate();
     useEffect(() => {
         try {
             const fetchSubCollections = async () => {
-                console.log("Fetching subcollections for collection " + collectionID + "!");
                 const response = await API.get("/subcollection/"+collectionID);
-                setSubCollections(response.data.data.subCollectionData);
+                if (response) {
+                    setSubCollections(response.data.data.subCollectionData);
+                }
             }
             fetchSubCollections();
         } catch(err) {
@@ -101,8 +103,8 @@ export function SubCollectionList({ collectionID, collectionName, username, hand
     },[]);
 
     return (<ul>{subCollections && subCollections.map(({ id, name, questions }) => {
-                return <SubCollectionListItem key={id} id={id} name={name} username={username} handleChange={handleChange}/>
-        })}
+        return <SubCollectionListItem key={id} id={id} name={name} username={username} handleChange={handleChange}/>
+    })}
         <li><NewSubCollection collectionID={collectionID} collectionName={collectionName}/></li>
     </ul>);
 }

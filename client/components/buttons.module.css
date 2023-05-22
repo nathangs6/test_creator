@@ -7,7 +7,7 @@
     border: none;
     font-size: 1rem;
     color: #2c3e50;
-    background: white;
+    background: #a89984;
     transition: all 0.25s ease;
     position: absolute;
     right: 0;
@@ -16,7 +16,7 @@
 }
 
 .modalClose:hover {
-    background: whitesmoke;
+    background: #928374;
 }
 
 .modalConfirm {
@@ -63,15 +63,15 @@
     border-radius: 4px;
     font-size: 0.8rem;
     border: none;
-    color: #2c3e50;
-    background: #fcfcfc;
+    color: #282828;
+    background: #a89984;
     transition: all 0.25s ease;
 }
 
 .modalCancel:hover {
     box-shadow: none;
     transform: none;
-    background: whitesmoke;
+    background: #928374;
 }
 
 

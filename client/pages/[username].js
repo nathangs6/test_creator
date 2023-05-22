@@ -1,19 +1,32 @@
 import { useRouter } from 'next/router';
-import { useState } from 'react';
-import API from '../../apis/api.js';
-import Layout from '../../components/layout.js';
-import UserInfo from '../../components/userInfo.js';
-import { PresetContextProvider } from '../../context/PresetContext.js';
-import { NewPreset, PresetList } from '../../components/lists/presetList.js';
-import {CollectionContextProvider } from '../../context/CollectionContext.js';
-import { NewCollection, CollectionList} from '../../components/lists/collectionList.js';
-import utilStyles from '../../styles/utils.module.css';
-import buttonStyles from '../../components/buttons.module.css';
+import { useState, useContext, useEffect } from 'react';
+import useAPIPrivate from '../hooks/useAPIPrivate.js';
+import AuthorizationContext from '../context/AuthorizationContext';
+import Layout from '../components/layout.js';
+import UserInfo from '../components/userInfo.js';
+import { PresetContextProvider } from '../context/PresetContext.js';
+import { NewPreset, PresetList } from '../components/lists/presetList.js';
+import {CollectionContextProvider } from '../context/CollectionContext.js';
+import { NewCollection, CollectionList} from '../components/lists/collectionList.js';
+import utilStyles from '../styles/utils.module.css';
+import buttonStyles from '../components/buttons.module.css';
 
 //function UserPage({ collectionData, presetData }) {
 function UserPage() {
+    const { auth } = useContext(AuthorizationContext);
+    const API = useAPIPrivate();
     const router = useRouter();
     const { username } = router.query;
+
+    const [userAuthorized, setUserAuthorized] = useState(false);
+
+    useEffect(() => {
+        if (auth.username !== username) {
+            router.push({ pathname: "/" });
+        } else {
+            setUserAuthorized(true);
+        }
+    }, []);
 
     const [testSelection, setTestSelection] = useState({
         presetSelection: ""
@@ -47,8 +60,15 @@ function UserPage() {
         if (valid === false) {
             return false;
         };
-        await API.post("/generate/" + username, {testSelection});
-        const response = await API.get("/generate/download/" + username, {responseType: 'blob'});
+        console.log("Generating...");
+        try {
+            await API.post("/generate/" + username, {testSelection});
+        } catch(err) {
+            console.log("Failed to generate!");
+            return null;
+        };
+        console.log("Downloading...");
+        const response = await API.get("/generate/" + username, {responseType: 'blob'});
         const url = window.URL.createObjectURL(new Blob([response.data]));
         const link = document.createElement('a');
         link.href = url;
@@ -57,7 +77,7 @@ function UserPage() {
         link.click();
     };
 
-    return (<Layout>
+    return (<>{userAuthorized && <Layout>
         <div className={utilStyles.centre}>
             <h1>Hello {username}</h1>
         </div>
@@ -83,7 +103,7 @@ function UserPage() {
                 <input form="generate-form" type="submit" value="Generate Practice Test" className={[buttonStyles.listOther, buttonStyles.generateButton].join(" ")}/>
             </div>
         </section>
-    </Layout>);
+    </Layout>}</>);
 }
 
 export async function getServerSideProps(context) {

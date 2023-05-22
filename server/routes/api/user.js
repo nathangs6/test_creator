@@ -7,8 +7,7 @@ const UserController = require("../../controllers/userController");
 const router = express.Router();
 
 // define routes
-router.post("/login", UserController.login);
 router.post("/create", UserController.createUser);
-router.put("/changepassword/:username", UserController.changePassword);
+router.put("/changepassword", UserController.changePassword);
 
 module.exports = router;

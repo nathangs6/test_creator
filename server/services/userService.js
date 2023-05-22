@@ -27,6 +27,15 @@ class UserService {
         };
     };
 
+    async findUserByID(userID) {
+        try {
+            return await UserModel.getUserByID(userID);
+        } catch(err) {
+            console.log(err);
+            return null;
+        };
+    };
+
     async userExists(username) {
         const user = await this.getUser(username);
         if (!user) {
@@ -39,7 +48,7 @@ class UserService {
         await UserModel.createUser(username, password);
     };
 
-    async changePassword(username, oldPassword, newPassword, confirmPassword) {
+    async changePassword(username, newPassword) {
         await UserModel.changePassword(username, newPassword);
     };
 };

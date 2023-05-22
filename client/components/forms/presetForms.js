@@ -1,5 +1,5 @@
 import { useState, useContext } from 'react';
-import API from '../../apis/api.js';
+import useAPIPrivate from '../../hooks/useAPIPrivate.js';
 import { BigModal, SmallModal } from '../modals/modal.js';
 import { PresetContext } from '../../context/PresetContext.js';
 import modalStyles from '../modals/modal.module.css';
@@ -48,6 +48,7 @@ function PresetModal({ setOpen, modalTitle, handleSubmit, presetData }) {
 
 export function NewPresetForm({ setOpen, username }) {
     const {addPreset} = useContext(PresetContext);
+    const API = useAPIPrivate();
     const [owner, setOwner] = useState(username);
     const [id, setID] = useState(-1);
     const [name, setName] = useState("Name");
@@ -64,8 +65,10 @@ export function NewPresetForm({ setOpen, username }) {
                 newPresetSep: sep,
                 newPresetPostamble: postamble
             });
-            addPreset(response.data.data.presetData);
-            setOpen(false);
+            if (response) {
+                addPreset(response.data.data.presetData);
+                setOpen(false);
+            }
         } catch(err) {
             console.log(err);
         };
@@ -81,11 +84,12 @@ export function NewPresetForm({ setOpen, username }) {
         postamble, setPostamble
     };
 
-    return <PresetModal setOpen={setOpen} handleSubmit={handleSubmit} presetData={presetData}/>
+    return <PresetModal setOpen={setOpen} modalTitle={modalTitle} handleSubmit={handleSubmit} presetData={presetData}/>
 };
 
 export function EditPresetForm({ setOpen, currentData }) {
     const {updatePreset} = useContext(PresetContext);
+    const API = useAPIPrivate();
     const [owner, setOwner] = useState(currentData.username);
     const [id, setID] = useState(currentData.id);
     const [name, setName] = useState(currentData.name);
@@ -102,8 +106,10 @@ export function EditPresetForm({ setOpen, currentData }) {
                 newPresetSep: sep,
                 newPresetPostamble: postamble
             });
-            updatePreset(response.data.data.presetData);
-            setOpen(false);
+            if (response) {
+                updatePreset(response.data.data.presetData);
+                setOpen(false);
+            }
         } catch(err) {
             console.log(err);
         };
@@ -119,19 +125,22 @@ export function EditPresetForm({ setOpen, currentData }) {
         postamble, setPostamble
     };
 
-    return <PresetModal setOpen={setOpen} handleSubmit={handleSubmit} presetData={presetData}/>
+    return <PresetModal setOpen={setOpen} modalTitle={modalTitle} handleSubmit={handleSubmit} presetData={presetData}/>
 };
 
 export function DeletePresetForm({ setOpen, presetData }) {
     const {deletePreset, setPresets} = useContext(PresetContext);
+    const API = useAPIPrivate();
     const modalTitle = "Delete Preset";
 
     const handleSubmit = async function (e) {
         e.preventDefault();
         try {
-            await API.delete("/preset/"+presetData.id, {});
-            deletePreset(presetData.id);
-            setOpen(false);
+            const response = await API.delete("/preset/"+presetData.id, {});
+            if (response) {
+                deletePreset(presetData.id);
+                setOpen(false);
+            }
         } catch(err) {
             console.log(err);
         };

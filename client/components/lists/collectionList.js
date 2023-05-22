@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import API from '../../apis/api.js';
+import useAPIPrivate from '../../hooks/useAPIPrivate.js';
 import { CollectionContext } from '../../context/CollectionContext.js';
 import { NewCollectionForm, RenameCollectionForm, DeleteCollectionForm } from '../forms/collectionForms.js';
 import { SubCollectionContextProvider } from '../../context/SubCollectionContext.js';
@@ -58,11 +58,14 @@ function CollectionListItem({ id, name, username, handleChange }) {
 
 export function CollectionList({ username, handleChange }) {
     const {collections, setCollections} = useContext(CollectionContext);
+    const API = useAPIPrivate();
     useEffect(() => {
         try {
             const fetchCollections = async () => {
                 const response = await API.get("/collection/"+username);
-                setCollections(response.data.data.collectionData);
+                if (response) {
+                    setCollections(response.data.data.collectionData);
+                }
             }
             fetchCollections();
         } catch(err) {
