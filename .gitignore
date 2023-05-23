@@ -13,6 +13,7 @@ todo.txt
 client/.next/
 client/node_modules
 client/package-lock.json
+client/.env.local
 
 # Server ignoring
 node_modules/

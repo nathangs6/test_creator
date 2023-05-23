@@ -1,12 +1,10 @@
 import axios from 'axios';
-const BASE_URL = 'http://localhost:3001/api';
-
 
 export default axios.create({
-    baseURL: BASE_URL 
+    baseURL: process.env.NEXT_PUBLIC_API_BASE
 });
 
 export const APIPrivate = axios.create({
-    baseURL: BASE_URL,
+    baseURL: process.env.NEXT_PUBLIC_API_BASE,
     withCredentials: true
 });
