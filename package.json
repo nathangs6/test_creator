@@ -6,7 +6,7 @@
   "scripts": {
     "startDev": "nodemon server.js",
     "start": "node server.js",
-    "heroku-postbuild": "cd ../client && npm install && npm run build && cd ../jobs && ./initDB.sh"
+    "heroku-postbuild": "cd client && npm install && npm run build && cd ../jobs && ./initDB.sh"
   },
   "keywords": [],
   "author": "Nathan Gurrin-Smith",
