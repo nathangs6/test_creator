@@ -34,11 +34,11 @@ class GenerateService {
             questionIDList = await QuestionModel.getQuestionIDsInSubCollection(subCollectionID);
             selectedQuestionIDs = this.randomSelection(questionIDList,numQuestions);
             if (selectedQuestionIDs.length !== numQuestions) {
-                console.log("Too many questions asked for!");
-                return null;
+                throw new Error("Too many questions asked for!");
             };
             finalQuestionIDList = finalQuestionIDList.concat(selectedQuestionIDs);
         };
+        finalQuestionIDList.sort(function(){return 0.5 - Math.random()});
         return finalQuestionIDList;
     };
 
@@ -66,7 +66,6 @@ class GenerateService {
         var testString = "";
 
         // Get preset
-        console.log("Getting preset " + presetID);
         var preset;
         try {
             preset = await PresetModel.getPreset(presetID);
@@ -80,13 +79,11 @@ class GenerateService {
         }
 
         // Make question list
-        console.log("Getting questions " + choiceData);
         var questionIDList;
         try {
             questionIDList = await this.getQuestionList(choiceData);
         } catch(err) {
-            console.log(err);
-            return null;
+            throw new Error(err.message);
         };
         if (!questionIDList) {
             console.log("Null: Something went wrong!");
@@ -94,7 +91,6 @@ class GenerateService {
         }
 
         // Construct tex file and compile pdf
-        console.log("Constructing test string");
         try {
             testString = await this.generateTestString(preset, questionIDList);
         } catch(err) {

@@ -7,8 +7,13 @@ class GenerateController {
         console.log("Generating test");
         console.log(username);
         console.log(choiceData);
-        await GenerateService.generateTest(username, choiceData);
-        res.sendStatus(200);
+        try {
+            await GenerateService.generateTest(username, choiceData);
+            res.sendStatus(200);
+        } catch(err) {
+            console.log(err);
+            res.sendStatus(401);
+        };
     }
 
     async downloadTest(req, res) {
@@ -18,7 +23,7 @@ class GenerateController {
             res.download(filePath);
             setTimeout(async () => {
                 await GenerateService.removeFiles(username), 
-                1000
+                    1000
             });
         } catch(err) {
             console.log(err);

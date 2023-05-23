@@ -53,10 +53,8 @@ class UserService {
     };
 
     async resetUsers(allowedUserIDs) {
-        for (var idx = 0; idx < allowedUserIDs.length; idx++) {
-            await UserModel.deleteUser(allowedUserIDs[idx])
-        }
-    }
+        UserModel.deleteOtherUsers(allowedUserIDs);
+    };
 };
 
 module.exports = new UserService();

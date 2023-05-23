@@ -74,6 +74,17 @@ class UserModel {
             [userID]
         );
     }
+
+    async deleteOtherUsers(allowedUserIDs) {
+        const placeholders = allowedUserIDs.map(function(user, idx) {
+            return '$' + (idx + 1)
+        }).join(',');
+        await db.query(
+            "DELETE FROM UserAccount " +
+            "WHERE UserAccountID NOT IN (" + placeholders + ")",
+            allowedUserIDs
+        );
+    };
 };
 
 module.exports = new UserModel();

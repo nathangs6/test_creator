@@ -7,12 +7,11 @@ const ALLOWED_USER_IDS = [1];
 class JobController {
     async resetDB(req, res) {
         try {
-            console.log(ALLOWED_USER_IDS)
             await UserService.resetUsers(ALLOWED_USER_IDS);
-            await PresetService.cleanPresets();
-            await CollectionService.cleanCollections();
-            await SubCollectionService.cleanSubCollections();
-            await QuestionService.cleanQuestions();
+            setTimeout(async () => { await PresetService.cleanPresets() }, 100);
+            setTimeout(async () => { await CollectionService.cleanCollections() }, 150);
+            setTimeout(async () => { await SubCollectionService.cleanSubCollections() }, 200);
+            setTimeout(async () => { await QuestionService.cleanQuestions() }, 250);
             res.sendStatus(200);
         } catch(err) {
             console.log(err);

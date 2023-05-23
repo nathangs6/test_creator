@@ -39,9 +39,13 @@ function UserPage() {
         });
     };
 
+    const [generateAlert, setGenerateAlert] = useState(false);
+    const [generateAlertMsg, setGenerateAlertMsg] = useState('');
+
     const validateGenerateTestForm = () => {
         if (testSelection.presetSelection === "") {
-            window.alert("Please select a preset!");
+            setGenerateAlertMsg("Please select a preset!");
+            setGenerateAlert(true);
             return false;
         };
 
@@ -50,7 +54,8 @@ function UserPage() {
                 return true;
             }
         }
-        window.alert("Please choose at least one subcollection!");
+        setGenerateAlertMsg("Please choose at least one subcollection!");
+        setGenerateAlert(true);
         return false;
     }
 
@@ -64,9 +69,12 @@ function UserPage() {
         try {
             await API.post("/generate/" + username, {testSelection});
         } catch(err) {
-            console.log("Failed to generate!");
+            setGenerateAlertMsg("You chose more questions than a subcollection has!");
+            setGenerateAlert(true);
             return null;
         };
+        setGenerateAlert(false);
+        setGenerateAlertMsg('');
         console.log("Downloading...");
         const response = await API.get("/generate/" + username, {responseType: 'blob'});
         const url = window.URL.createObjectURL(new Blob([response.data]));
@@ -101,6 +109,7 @@ function UserPage() {
             </div>
             <div className={[utilStyles.centre, buttonStyles.generateButtonContainer].join(" ")}>
                 <input form="generate-form" type="submit" value="Generate Practice Test" className={[buttonStyles.listOther, buttonStyles.generateButton].join(" ")}/>
+            {generateAlert && <p>{generateAlertMsg}</p>}
             </div>
         </section>
     </Layout>}</>);

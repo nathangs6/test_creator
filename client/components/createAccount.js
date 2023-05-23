@@ -61,6 +61,7 @@ export default function CreateAccount() {
                 value={createData.username}
                 className={utilStyles.textInput}
                 onChange={e => handleCreateChange(e)}
+                required
             /><br/>
             <label htmlFor="password-input">Password</label><br/>
             <input 
@@ -70,6 +71,7 @@ export default function CreateAccount() {
                 value={createData.password}
                 className={utilStyles.textInput}
                 onChange={e => handleCreateChange(e)}
+                required
             /><br/>
             <label htmlFor="password-input">Confirm Password</label><br/>
             <input 
@@ -79,6 +81,7 @@ export default function CreateAccount() {
                 value={createData.confirmPassword}
                 className={utilStyles.textInput}
                 onChange={e => handleCreateChange(e)}
+                required
             /><br/>
             <input type="submit" value="Create" className={[buttonStyles.listNew, loginStyles.button].join(" ")}/>
         </form>
