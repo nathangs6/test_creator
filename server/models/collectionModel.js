@@ -50,6 +50,33 @@ class CollectionModel {
             [collectionID]
         );
     };
+
+    async cleanCollections() {
+        try {
+            await db.query(
+                "DELETE FROM Collection " + 
+                "WHERE NOT EXISTS (" + 
+                "SELECT 1 FROM JunctionUserAccountCollection " + 
+                "WHERE CollectionID = Collection.CollectionID" + 
+                ")"
+            );
+        } catch(err) {
+            console.log(err);
+        };
+    };
+
+    async addSubCollection(collectionID, subCollectionID) {
+        try {
+            await db.query(
+                "INSERT INTO JunctionCollectionSubCollection " + 
+                "(CollectionID, SubCollectionID) " + 
+                "VALUES ($1, $2)",
+                [collectionID, subCollectionID]
+            );
+        } catch(err) {
+            console.log(err);
+        };
+    };
 };
 
 module.exports = new CollectionModel();

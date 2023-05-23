@@ -20,6 +20,10 @@ class PresetService {
     async deletePreset(presetID) {
         await PresetModel.deletePreset(presetID);
     };
+
+    async cleanPresets() {
+        await PresetModel.cleanPresets();
+    };
 };
 
 module.exports = new PresetService();

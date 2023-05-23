@@ -13,7 +13,7 @@ class UserController {
                 return null;
             };
 
-            if (user.password !== oldPassword) {
+            if (user.password !== oldPassword || username === "") {
                 res.sendStatus(401);
                 return null;
             };
@@ -28,11 +28,11 @@ class UserController {
 
     async createUser(req, res) {
         try {
-            const username = req.body.username;
+            const username = req.body.username.trim();
             const password = req.body.password;
 
             const userExists = await UserService.userExists(username);
-            if (userExists) {
+            if (userExists || username === "") {
                 res.sendStatus(403);
                 return null;
             };

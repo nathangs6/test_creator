@@ -1,3 +1,4 @@
+const CollectionModel = require("../models/collectionModel.js");
 const SubCollectionModel = require("../models/subCollectionModel.js");
 const QuestionModel = require("../models/questionModel.js");
 
@@ -8,7 +9,8 @@ class SubCollectionService {
     };
 
     async createSubCollection(collectionID, subCollectionName) {
-        const newSubCollection = await SubCollectionModel.createSubCollection(collectionID, subCollectionName);
+        const newSubCollection = await SubCollectionModel.createSubCollection(subCollectionName);
+        await CollectionModel.addSubCollection(collectionID, newSubCollection.id);
         return newSubCollection;
     };
 
@@ -18,7 +20,11 @@ class SubCollectionService {
 
     async deleteSubCollection(subCollectionID) {
         await SubCollectionModel.deleteSubCollection(subCollectionID);
-        await QuestionModel.deleteOrphanedQuestions();
+        await QuestionModel.cleanQuestions();
+    };
+
+    async cleanSubCollections() {
+        await SubCollectionModel.cleanSubCollections();
     };
 };
 

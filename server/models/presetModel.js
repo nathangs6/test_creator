@@ -67,6 +67,20 @@ class PresetModel {
             [presetID]
         );
     };
+
+    async cleanPresets() {
+        try {
+            await db.query(
+                "DELETE FROM Preset " + 
+                "WHERE NOT EXISTS (" + 
+                "SELECT 1 FROM JunctionUserAccountPreset " + 
+                "WHERE PresetID = Preset.PresetID" + 
+                ")"
+            );
+        } catch(err) {
+            console.log(err);
+        };
+    };
 };
 
 module.exports = new PresetModel();

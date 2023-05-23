@@ -66,6 +66,14 @@ class UserModel {
             [userID, presetID]
         );
     };
+
+    async deleteUser(userID) {
+        await db.query(
+            "DELETE FROM UserAccount " + 
+            "WHERE UserAccountID = $1",
+            [userID]
+        );
+    }
 };
 
 module.exports = new UserModel();

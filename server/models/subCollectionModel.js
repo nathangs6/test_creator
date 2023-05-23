@@ -4,9 +4,11 @@ const { renameKey } = require("./formatData.js");
 class SubCollectionModel {
     async getSubCollections(collectionID) {
         const subCollectionQueryResults = await db.query(
-            "SELECT SubCollectionID, Name " + 
-            "FROM SubCollection " + 
-            "WHERE CollectionID = $1",
+            "SELECT * " +
+            "FROM SubCollection " +
+            "INNER JOIN JunctionCollectionSubCollection " + 
+            "ON SubCollection.SubCollectionID = JunctionCollectionSubCollection.SubCollectionID " + 
+            "WHERE JunctionCollectionSubCollection.CollectionID = $1",
             [collectionID]
         );
         const subCollectionsData = subCollectionQueryResults.rows;
@@ -16,12 +18,12 @@ class SubCollectionModel {
         return subCollectionsData;
     };
 
-    async createSubCollection(collectionID, subCollectionName) {
+    async createSubCollection(subCollectionName) {
         const subCollectionCreation = await db.query(
-            "INSERT INTO SubCollection (Name, CollectionID) " + 
-            "VALUES ($1,$2) " +
+            "INSERT INTO SubCollection (Name) " + 
+            "VALUES ($1) " +
             "RETURNING *",
-            [subCollectionName, collectionID]
+            [subCollectionName]
         );
         const newSubCollection = subCollectionCreation.rows[0];
         renameKey(newSubCollection, "subcollectionid", "id");
@@ -47,6 +49,20 @@ class SubCollectionModel {
             "WHERE SubCollectionID = $1",
             [subCollectionID]
         )
+    };
+
+    async cleanSubCollections() {
+        try {
+            await db.query(
+                "DELETE FROM SubCollection " + 
+                "WHERE NOT EXISTS (" + 
+                "SELECT 1 FROM JunctionCollectionSubCollection " + 
+                "WHERE SubCollectionID = SubCollection.SubCollectionID" + 
+                ")"
+            );
+        } catch(err) {
+            console.log(err);
+        };
     };
 };
 

@@ -22,6 +22,10 @@ class CollectionService {
         await CollectionModel.deleteCollection(collectionID);
         await QuestionModel.deleteOrphanedQuestions();
     };
+
+    async cleanCollections() {
+        await CollectionModel.cleanCollections();
+    };
 };
 
 module.exports = new CollectionService();

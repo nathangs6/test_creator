@@ -76,15 +76,28 @@ class QuestionModel {
         return updatedQuestion;
     };
 
-    async deleteOrphanedQuestions() {
-    };
-
     async deleteQuestion(questionID) {
         await db.query(
             "DELETE FROM Question " +
             "WHERE QuestionID = $1",
             [questionID]
         );
+    };
+
+    async cleanQuestions() {
+        try {
+            await db.query(
+                "DELETE FROM Question " + 
+                "WHERE NOT EXISTS (" + 
+                "SELECT 1 FROM JunctionUserAccountQuestion " + 
+                "WHERE QuestionID = Question.QuestionID" + 
+                ") OR NOT EXISTS (" + 
+                "SELECT 1 FROM JunctionSubCollectionQuestion " +
+                "WHERE QuestionID = Question.QuestionID)"
+            );
+        } catch(err) {
+            console.log(err)
+        };
     };
 };
 

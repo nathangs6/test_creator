@@ -18,6 +18,7 @@ const questionRoutes = require("./routes/api/question");
 const authenticationRoutes = require("./routes/authentication");
 const refreshRoutes = require("./routes/refresh");
 const generateRoutes = require("./routes/api/generate");
+const jobRoutes = require("./routes/jobs");
 
 const app = express(); // create instance of express and store it in app
 
@@ -33,6 +34,7 @@ app.use(cookieParser());
 app.use("/api/user", userRoutes);
 app.use("/api/auth", authenticationRoutes);
 app.use("/api/refresh", refreshRoutes);
+app.use("/api/jobs", jobRoutes);
 app.use(verifyJWT);
 app.use("/api/preset", presetRoutes);
 app.use("/api/collection", collectionRoutes);

@@ -1,3 +1,4 @@
+const CollectionService = require("../services/collectionService");
 const SubCollectionService = require("../services/subCollectionService");
 
 class SubCollectionController {
@@ -59,6 +60,10 @@ class SubCollectionController {
             console.log(err);
             res.sendStatus(400);
         };
+    };
+
+    async cleanSubCollections() {
+        SubCollectionModel.cleanSubCollections();
     };
 };
 

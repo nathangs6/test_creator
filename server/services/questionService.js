@@ -15,11 +15,12 @@ class QuestionService {
         return await QuestionModel.updateQuestion(questionID, updateData.name, updateData.content, updateData.source);
     };
 
-    async deleteOrphanedQuestions() {
-    };
-
     async deleteQuestion(questionID) {
         await QuestionModel.deleteQuestion(questionID);
+    };
+
+    async cleanQuestions() {
+        await QuestionModel.cleanQuestions();
     };
 };
 
