@@ -14,18 +14,44 @@ This is a program that will be used to generate practice tests from a list of qu
 
 \section{Use Cases}
 \begin{itemize}
-    \item Login,
-    \item Add, view, edit, and delete presets,
-    \item Add, view, edit, and delete questions,
-    \item add, view, edit, and delete categories,
-    \item generate practice tests
+    \item Login
+    \item Add, view, edit, and delete presets
+    \item Add, view, edit, and delete questions
+    \item Add, view, edit, and delete categories
+    \item Generate practice tests
 \end{itemize}
 
-\newpage
 \section{Technology}
-The framework being used is PERN.
+The framework being used is PERN (Postgres, Express, React, Node).
 
-\subsection{Data}
+\subsection{Server (Node + Express)}
+The main \texttt{server.js} file contains the base routes along with the middleware. Additionally, we have the following groups of modules:
+\begin{itemize}
+    \item Routes: used to direct requests to the right controller
+    \item Controllers: manages which services are used and client responses
+    \item Services: handles business logic of each task
+    \item Models: handles interaction with the database
+\end{itemize}
+
+\subsubsection*{Routes}
+We are using the \texttt{/api/} style. The routes file will \textbf{only} contain the HTTP method and which controller function it will use. For example:
+\begin{center}
+    \texttt{router.METHOD("/", Controller.Function)}
+\end{center}
+
+\subsubsection*{Controllers}
+The controllers manage which services are activated when. It also handles client responses. These files are the \textbf{only} place where statements of the form \texttt{res.RESPONSE} can be put.
+
+\subsubsection*{Services}
+These modules handle the underlying business logic of each task the controller asks to be completed. These files are the \textbf{only} place where calls to the models can be put.
+
+\subsubsection*{Models}
+These modules handle individual interactions with the database. These files are the \textbf{only} place where calls to the database can be put.
+
+\subsection{Client (React + Next.js)}
+There are two main pages to the application. The first is the index page, at index.js, where users can create an account and sign in. The second is the user page, at [username].js, which is where all the user specific functions are found (see use cases above).
+
+\subsection{Data (PostgreSQL)}
 \subsubsection*{Naming Conventions}
 We will use the following naming conventions for our data model
 \begin{itemize}
@@ -42,7 +68,7 @@ Note: Because of the above note, we must reference all columns with lowercase in
 We will have the following data model:
 
 \begin{figure}[h!]
-    \begin{subfigure}{0.4\textwidth}
+    \begin{subfigure}{\textwidth}
         \begin{tabular}{|c|c|c|}
             \hline
             \multicolumn{3}{|c|}{UserAccount} \\
@@ -52,7 +78,7 @@ We will have the following data model:
         \end{tabular}
         \vspace*{2em}
     \end{subfigure}
-    \begin{subfigure}{0.6\textwidth}
+    \begin{subfigure}{\textwidth}
         \begin{tabular}{|c|c|c|c|c|}
             \hline
             \multicolumn{5}{|c|}{ClientAuthentication} \\
@@ -113,6 +139,36 @@ We will have the following data model:
         \vspace*{2em}
     \end{subfigure}
     \begin{subfigure}{0.5\textwidth}
+        \begin{tabular}{|c|c|}
+            \hline
+            \multicolumn{2}{|c|}{JunctionUserAccountPreset} \\
+            \hline
+            UserAccountID(FK) & PresetID(FK) \\
+            \hline
+        \end{tabular}
+        \vspace*{2em}
+    \end{subfigure}
+    \begin{subfigure}{0.5\textwidth}
+        \begin{tabular}{|c|c|}
+            \hline
+            \multicolumn{2}{|c|}{JunctionSubCollectionQuestion} \\
+            \hline
+            SubCollectionID(FK) & QuestionID(FK) \\
+            \hline
+        \end{tabular}
+        \vspace*{2em}
+    \end{subfigure}
+    \begin{subfigure}{0.5\textwidth}
+        \begin{tabular}{|c|c|}
+            \hline
+            \multicolumn{2}{|c|}{JunctionCollectionSubCollection} \\
+            \hline
+            CollectionID(FK) & SubCollectionID(FK) \\
+            \hline
+        \end{tabular}
+        \vspace*{2em}
+    \end{subfigure}
+    \begin{subfigure}{\textwidth}
         \begin{tabular}{|c|c|c|}
             \hline
             \multicolumn{3}{|c|}{JunctionUserAccountQuestion} \\
@@ -122,71 +178,45 @@ We will have the following data model:
         \end{tabular}
         \vspace*{2em}
     \end{subfigure}
-    \begin{subfigure}{0.3\textwidth}
-        \begin{tabular}{|c|c|}
-            \hline
-            \multicolumn{2}{|c|}{JunctionSubCollectionQuestion} \\
-            \hline
-            SubCollectionID(FK) & QuestionID(FK) \\
-            \hline
-        \end{tabular}
-    \end{subfigure}
 \end{figure}
 
 Which are related via,
 \begin{center}
     \begin{tikzpicture}
         \node[draw] at (0,0) (A) {user};
-        \node[draw] at (3,0) (B) {preset};
-        \node[draw] at (0,-1.5) (H) {junction\_user\_coll};
-        \node[draw] at (0,-3) (C) {collection};
-        \node[draw] at (0,-4.5) (D) {subcollection};
-        \node[draw] at (3,-4.5) (E) {subc\_ques};
-        \node[draw] at (6,-4.5) (F) {question};
-        \node[draw] at (3,-2.25) (G) {user\_ques};
+        \node[draw] at (3,0) (B) {junc\_user\_preset};
+        \node[draw] at (6,0) (C) {preset};
+        \node[draw] at (0,-1.5) (D) {junction\_user\_coll};
+        \node[draw] at (0,-3) (E) {collection};
+        \node[draw] at (0,-4.5) (F) {junction\_col\_subc};
+        \node[draw] at (0,-6) (G) {subcollection};
+        \node[draw] at (4,-6) (H) {junction\_subc\_ques};
+        \node[draw] at (8,-6) (I) {question};
+        \node[draw] at (3,-2.25) (J) {junc\_user\_ques};
 
         \draw [->] (A) -- (B) node[midway,above] {1:n};
-        \draw [->] (A) -- (H) node[midway,left] {m:n};
-        \draw [->] (H) -- (C) node[midway,left] {m:n};
-        \draw [->] (C) -- (D) node[midway,left] {1:n};
-        \draw [<->] (D) -- (E) node[midway,above] {m:n};
-        \draw [<->] (E) -- (F) node[midway,above] {m:n};
-        \draw [<->] (A) -- (G) node[midway,above right] {m:n};
-        \draw [<->] (G) -- (F) node[midway,above right] {m:n};
+        \draw [<-] (B) -- (C) node[midway,above] {n:1};
+        \draw [->] (A) -- (D) node[midway,left] {1:n};
+        \draw [<-] (D) -- (E) node[midway,left] {n:1};
+        \draw [->] (E) -- (F) node[midway,left] {1:n};
+        \draw [<-] (F) -- (G) node[midway,left] {n:1};
+        \draw [->] (G) -- (H) node[midway,below] {1:n};
+        \draw [<-] (H) -- (I) node[midway,below] {n:1};
+        \draw [->] (I) -- (J) node[midway,above right] {1:n};
+        \draw [<-] (J) -- (A) node[midway,above right] {1:n};
     \end{tikzpicture}
 \end{center}
 
-\textbf{Orphans:} Some of the properties above require a parent.
+\textbf{Orphans:} Some of the properties above require a parent. These are,
 \begin{itemize}
     \item A Collection requires at least one parent UserAccount,
     \item A SubCollection requires a parent Collection,
     \item A Question requires a parent UserAccount and a parent SubCollection
     \item A Preset requires a parent UserAccount
 \end{itemize}
-Thus, when we delete a parent, we not only need to delete entries in the junction table, but also the entries in the child tables since, most frequently, the foreign keys will be stored in the junction table and not the child table. The ones that need this, that is, the ones that aren't handled by ON DELETE CASCADE, are orphaned collections and orphaned questions. So, we need to handle orphans when we delete:
-\begin{itemize}
-    \item Users (questions and collections)
-    \item Subcollections (questions)
-\end{itemize}
+Thus, when we delete a parent, we not only need to delete entries in the junction table, but also the entries in the child tables since, most frequently, the foreign keys will be stored in the junction table and not the child table. The \texttt{cleanX} functions in the \texttt{service} modules handle this.
 
-
-\subsection{Backend}
-\subsubsection*{Routes}
-We are using the \texttt{/api/} style.
-\begin{itemize}
-    \item All user related routes will be at /api/user/
-    \item All preset related routes will be at /api/preset/
-    \item All collection related routes will be at /api/collection/
-    \item All subcollection related routes will be at /api/subcollection/
-    \item All question related routes will be at /api/question/
-\end{itemize}
-
-\subsubsection*{Other Modules}
-Here are the other modules we have,
-\begin{itemize}
-    \item dbClean.js: as mentioned above, we need to ensure orphaned entities are deleted, which this module handles.
-\end{itemize}
-
-\subsubsection*{Client}
+\subsection{Jobs}
+There is a single job that runs once every day which removes all unspecified user accounts from the database. These user accounts are hardcoded into the application and can be added by the developer. The unspecified accounts are removed to keep data costs low.
 
 \end{document}
