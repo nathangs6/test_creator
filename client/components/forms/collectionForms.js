@@ -8,7 +8,7 @@ export function NewCollectionForm({ setOpen, username }) {
     const { addCollection } = useContext(CollectionContext);
     const API = useAPIPrivate();
     const modalTitle = "New Collection";
-    const [name, setName] = useState("Enter Name");
+    const [name, setName] = useState("");
     const [id, setID] = useState(-1);
 
     const handleSubmit = async (e) => {
@@ -30,6 +30,7 @@ export function NewCollectionForm({ setOpen, username }) {
             type="text"
             name="newCollectionName"
             value={name}
+            placeholder="Enter collection name"
             onChange={e => setName(e.target.value)}
             required/>
     </SmallModal>);

@@ -1,0 +1,31 @@
+.titleHeading {
+    margin-bottom: 0.5em;
+}
+
+.container {
+    width: 50%;
+    margin: auto;
+    padding: 0.5em 0 1em 0;
+    background-color: #3c3836;
+    box-shadow: 0 5px 20px 0 black;
+    text-align: center;
+}
+
+.containerRule {
+    width: 90%;
+}
+
+.button {
+    margin-top: 1em;
+    padding: 1em 2em 1em 2em;
+    font-size: 0.9em;
+}
+
+.heading {
+    margin-top: 0;
+}
+
+.separator {
+    margin-top: 2em;
+    margin-bottom: 2em;
+}

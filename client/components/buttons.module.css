@@ -77,6 +77,7 @@
 
 .listNew {
     background-color: #b8bb26;
+    border-radius: 2px;
     border: none;
     cursor: pointer;
 }
@@ -87,6 +88,7 @@
 
 .listEdit {
     background-color: #fabd2f;
+    border-radius: 2px;
     border: none;
     cursor: pointer;
 }
@@ -97,6 +99,7 @@
 
 .listDelete {
     background-color: #fb4934;
+    border-radius: 2px;
     border: none;
     cursor: pointer;
 }
@@ -107,6 +110,7 @@
 
 .listOther {
     background-color: #83a598;
+    border-radius: 2px;
     border: none;
     cursor: pointer;
 }
