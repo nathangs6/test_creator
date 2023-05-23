@@ -16,6 +16,10 @@ class GenerateController {
             const username = req.params.username;
             const filePath = await GenerateService.getDownloadPath(username);
             res.download(filePath);
+            setTimeout(async () => {
+                await GenerateService.removeFiles(username), 
+                1000
+            });
         } catch(err) {
             console.log(err);
         };

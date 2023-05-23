@@ -118,6 +118,10 @@ class GenerateService {
         const filePath = './scripts/output/' + username + 'PracticeTest.pdf';
         return filePath
     }
+
+    async removeFiles(username) {
+        await shell.exec('rm ./scripts/output/' + username + '*');
+    }
 }
 
 module.exports = new GenerateService();
