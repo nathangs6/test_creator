@@ -1,0 +1,129 @@
+.modalClose {
+    cursor: pointer;
+    font-weight: 500;
+    height: 3rem;
+    width: 5%;
+    border-radius: 4px;
+    border: none;
+    font-size: 1rem;
+    color: #2c3e50;
+    background: #a89984;
+    transition: all 0.25s ease;
+    position: absolute;
+    right: 0;
+    top: 0;
+    align-self: flex-end;
+}
+
+.modalClose:hover {
+    background: #928374;
+}
+
+.modalConfirm {
+    /* Styling */
+    cursor: pointer;
+    font-weight: 500;
+    padding: 11px 28px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    border: none;
+    color: #fff;
+    background: #98971a;
+    transition: all 0.25s ease;
+}
+
+.modalConfirm:hover {
+    background: #79740e;
+}
+
+.modalDelete {
+    /* Styling */
+    cursor: pointer;
+    font-weight: 500;
+    padding: 11px 28px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    border: none;
+    color: #fff;
+    background: #cc241d;
+    transition: all 0.25s ease;
+}
+
+.modalDelete:hover {
+    background: #9d0006;
+}
+
+.modalCancel {
+    /*margin-top: 10px;*/
+    text-align: center;
+    /* Styling */
+    cursor: pointer;
+    font-weight: 500;
+    padding: 11px 28px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    border: none;
+    color: #282828;
+    background: #a89984;
+    transition: all 0.25s ease;
+}
+
+.modalCancel:hover {
+    box-shadow: none;
+    transform: none;
+    background: #928374;
+}
+
+
+.listNew {
+    background-color: #b8bb26;
+    border-radius: 2px;
+    border: none;
+    cursor: pointer;
+}
+
+.listNew:hover {
+    background-color: #98971a;
+}
+
+.listEdit {
+    background-color: #fabd2f;
+    border-radius: 2px;
+    border: none;
+    cursor: pointer;
+}
+
+.listEdit:hover {
+    background-color: #d79921;
+}
+
+.listDelete {
+    background-color: #fb4934;
+    border-radius: 2px;
+    border: none;
+    cursor: pointer;
+}
+
+.listDelete:hover {
+    background-color: #cc241d;
+}
+
+.listOther {
+    background-color: #83a598;
+    border-radius: 2px;
+    border: none;
+    cursor: pointer;
+}
+
+.listOther:hover {
+    background-color: #458588;
+}
+
+.generateButton {
+    padding: 1em;
+}
+
+.generateButtonContainer {
+    margin-top: 1em;
+    margin-bottom: 1em;
+}

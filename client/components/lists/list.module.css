@@ -1,0 +1,96 @@
+.presetListItem {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    height: 2em;
+    gap: 5px;
+}
+
+.newPresetButton {
+    width: 100%;
+}
+
+.collectionList {
+    border-left: solid 1px grey;
+}
+
+.collectionListItem {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    height: 2em;
+    gap: 2px;
+    align-items: center;
+}
+
+.newCollectionButton {
+    width: 100%;
+}
+
+.expandElement {
+    flex: 2;
+    overflow: auto;
+}
+
+.fixedElement {
+    flex: 0 0;
+    height: 1em;
+}
+
+.subCollectionList {
+    border: solid 1px grey;
+}
+
+.subCollectionListItem {
+    width: 98%;
+    margin-left: auto;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    height: 2em;
+    gap: 5px;
+}
+
+.newSubCollection {
+    width: 98%;
+    margin-left: auto;
+}
+
+.questionListItem {
+    width: 96%;
+    margin-left: auto;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    height: 2em;
+    gap: 2px;
+}
+
+.newQuestion {
+    width: 96%;
+    margin-left: auto;
+}
+
+.maxWidth {
+    width: 100%;
+}
+
+.counterInput {
+    -moz-appearance: textfield;
+    width: 2em;
+    flex: 0 0;
+    background-color: #83a598;
+    border: none;
+}
+
+.counterInput:hover, .counterInput:focus {
+    -moz-appearance: number-input;
+    background-color: #458588;
+    border: none;
+    outline: none;
+}
+
+.radioInput {
+    accent-color: #83a598;
+}
