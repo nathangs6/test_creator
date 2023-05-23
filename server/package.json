@@ -4,9 +4,7 @@
   "description": "Backend for Test Creator",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon server.js",
-    "authStart": "nodemon authServer.js",
-    "jobStart": "nodemon jobServer.js"
+    "start": "nodemon server.js"
   },
   "keywords": [],
   "author": "Nathan Gurrin-Smith",

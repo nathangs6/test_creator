@@ -58,6 +58,14 @@ class UserModel {
             [userID, collectionID]
         );
     };
+    
+    async addPresetToUser(userID, presetID) {
+        await db.query(
+            "INSERT INTO JunctionUserAccountPreset (UserAccountID, PresetID) " + 
+            "VALUES ($1, $2)",
+            [userID, presetID]
+        );
+    };
 };
 
 module.exports = new UserModel();

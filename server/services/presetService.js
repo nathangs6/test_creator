@@ -1,3 +1,4 @@
+const UserModel = require("../models/userModel.js");
 const PresetModel = require("../models/presetModel.js");
 
 class PresetService {
@@ -7,7 +8,8 @@ class PresetService {
     };
 
     async createPreset(userID, presetData) {
-        const newPreset = await PresetModel.createPreset(userID, presetData.name, presetData.preamble, presetData.sep, presetData.postamble);
+        const newPreset = await PresetModel.createPreset(presetData.name, presetData.preamble, presetData.sep, presetData.postamble);
+        await UserModel.addPresetToUser(userID, newPreset.id);
         return newPreset;
     };
 

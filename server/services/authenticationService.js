@@ -4,7 +4,7 @@ const AuthenticationModel = require("../models/authenticationModel");
 
 class AuthenticationService {
     ACCESS_TOKEN_EXPIRY_TIME() {
-        return 5;
+        return 15 * 60;
     }
     REFRESH_TOKEN_EXPIRY_TIME() {
         return 1 * 24 * 60 * 60;
@@ -12,7 +12,6 @@ class AuthenticationService {
 
     generateAccessToken(username) {
         const user = { username };
-        console.log(this.ACCESS_TOKEN_EXPIRY_TIME());
         return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {expiresIn: this.ACCESS_TOKEN_EXPIRY_TIME() });
     };
 

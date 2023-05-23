@@ -4,9 +4,11 @@ const { renameKey } = require("./formatData.js");
 class PresetModel {
     async getPresets(userID) {
         const presetQueryResults = await db.query(
-            "SELECT PresetID, Name, Preamble, Sep, Postamble " + 
+            "SELECT * " + 
             "FROM Preset " + 
-            "WHERE UserAccountID = $1",
+            "INNER JOIN JunctionUserAccountPreset " +
+            "ON Preset.PresetID = JunctionUserAccountPreset.PresetID " +
+            "WHERE JunctionUserAccountPreset.UserAccountID = $1",
             [userID]
         );
         const presetsData = presetQueryResults.rows;
@@ -31,12 +33,12 @@ class PresetModel {
         };
     };
 
-    async createPreset(userID, name, preamble, sep, postamble) {
+    async createPreset(name, preamble, sep, postamble) {
         const presetCreation = await db.query(
-            "INSERT INTO Preset (Name, Preamble, Sep, Postamble, UserAccountID) " + 
-            "VALUES ($1, $2, $3, $4, $5) " + 
+            "INSERT INTO Preset (Name, Preamble, Sep, Postamble) " + 
+            "VALUES ($1, $2, $3, $4) " + 
             "RETURNING *",
-            [name, preamble, sep, postamble, userID]
+            [name, preamble, sep, postamble]
         );
         const newPreset = presetCreation.rows[0];
         renameKey(newPreset, "presetid", "id");
