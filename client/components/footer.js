@@ -7,7 +7,7 @@ export default function Footer() {
         <footer>
             <hr className={layoutStyles.footerSeparator}/>
             <p className={utilStyles.noMargin}>Author: <a href="https://github.com/nathangs6/">Nathan Gurrin-Smith</a></p>
-            <p className={utilStyles.noMargin}>Code: <a href="https://github.com/nathangs6/testCreator">here</a></p>
+            <p className={utilStyles.noMargin}>Code: <a href="https://github.com/nathangs6/test_creator">here</a></p>
         </footer>
     );
 }
