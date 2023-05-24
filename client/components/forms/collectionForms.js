@@ -28,6 +28,7 @@ export function NewCollectionForm({ setOpen, username }) {
         <label htmlFor="newCollectionName">New Collection Name: </label>
         <input
             type="text"
+            className={modalStyles.smallTextarea}
             name="newCollectionName"
             value={name}
             placeholder="Enter collection name"

@@ -28,6 +28,7 @@ export function NewSubCollectionForm({ setOpen, collectionID, collectionName }) 
         <label htmlFor="newSubCollectionName">New Subcollection Name: </label>
         <input
             type="text"
+            className={modalStyles.smallTextarea}
             name="newSubCollectionName"
             value={name}
             onChange={e => setName(e.target.value)}
