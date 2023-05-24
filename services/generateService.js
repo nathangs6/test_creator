@@ -97,7 +97,7 @@ class GenerateService {
             console.log(err);
         };
         try {
-            const filePath = '/home/yewlkang/github/test_creator/server/scripts/output/' + username + 'PracticeTest.tex';
+            const filePath = '/app/scripts/output/' + username + 'PracticeTest.tex';
             console.log("Writing to " + filePath);
             await fs.writeFile(filePath, testString);
             console.log("Compiling");
