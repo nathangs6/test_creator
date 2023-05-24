@@ -22,10 +22,13 @@ const jobRoutes = require("./routes/jobs");
 
 const app = express(); // create instance of express and store it in app
 
+const corsOptions = {
+    origin: "https://www.tc.nathangs.ca"
+}
 
 // Middlewear
 app.use(logger);
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
