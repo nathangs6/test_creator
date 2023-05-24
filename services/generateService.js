@@ -1,4 +1,5 @@
 const fs = require("fs/promises");
+const path = require("path");
 const shell = require("shelljs");
 const PresetModel = require("../models/presetModel");
 const QuestionModel = require("../models/questionModel");
@@ -97,7 +98,7 @@ class GenerateService {
             console.log(err);
         };
         try {
-            const filePath = '/app/scripts/output/' + username + 'PracticeTest.tex';
+            const filePath = path.join(process.cwd(),'scripts','output', username + 'PracticeTest.tex');
             console.log("Writing to " + filePath);
             await fs.writeFile(filePath, testString);
             console.log("Compiling");

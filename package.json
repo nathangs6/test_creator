@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "startDev": "nodemon server.js",
-    "start": "node server.js"
+    "start": "node server.js",
+    "heroku-postbuild": "cd scripts/ && mkdir output"
   },
   "keywords": [],
   "author": "Nathan Gurrin-Smith",
