@@ -23,7 +23,8 @@ const jobRoutes = require("./routes/jobs");
 const app = express(); // create instance of express and store it in app
 
 const corsOptions = {
-    origin: "https://www.tc.nathangs.ca"
+    origin: "https://www.tc.nathangs.ca",
+    credentials: true
 }
 
 // Middlewear
@@ -34,7 +35,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(function(req,res,next) {
     res.set('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
-    res.set('Access-Control-Allow-Credentials','true');
     if (req.method === 'OPTIONS') {
         return res.sendStatus(200);
     } else {
