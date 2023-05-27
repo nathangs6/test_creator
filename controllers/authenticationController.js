@@ -15,9 +15,9 @@ class AuthenticationController {
                 return res.sendStatus(403);
             };
 
-            if (user.password !== password) {
+            if (!AuthenticationService.verifyLogin(user, password)) {
                 return res.sendStatus(401);
-            }
+            };
 
             const accessToken = AuthenticationService.generateAccessToken(user.username);
             const refreshToken = await AuthenticationService.generateRefreshToken(user.username, user.id);

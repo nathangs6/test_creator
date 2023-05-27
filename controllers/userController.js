@@ -1,3 +1,4 @@
+const AuthenticationService = require("../services/authenticationService");
 const UserService = require("../services/userService");
 
 class UserController {
@@ -9,13 +10,16 @@ class UserController {
             
             const user = await UserService.getUser(username);
             if (!user) {
-                res.sendStatus(403);
-                return null;
+                return res.sendStatus(403);
             };
 
-            if (user.password !== oldPassword || username === "") {
-                res.sendStatus(401);
-                return null;
+            if (username === "") {
+                return res.sendStatus(401);
+            }
+
+            const correctPassword = await AuthenticationService.verifyLogin(user, oldPassword);
+            if (!correctPassword) {
+                return res.sendStatus(401);
             };
 
             await UserService.changePassword(username, newPassword);
@@ -27,17 +31,21 @@ class UserController {
     };
 
     async createUser(req, res) {
+        console.log("Hello");
         try {
+            console.log(req);
             const username = req.body.username.trim();
             const password = req.body.password;
 
             const userExists = await UserService.userExists(username);
             if (userExists || username === "") {
-                res.sendStatus(403);
-                return null;
+                return res.sendStatus(403);
             };
 
-            await UserService.createUser(username, password);
+            const hashedPassword = await AuthenticationService.hashPassword(password);
+            console.log(hashedPassword);
+
+            await UserService.createUser(username, hashedPassword);
             res.sendStatus(200);
         } catch(err) {
             console.log(err);
@@ -55,8 +63,8 @@ class UserController {
             if (!user) {
                 return res.sendStatus(403);
             };
-
-            if (user.password !== password) {
+            
+            if (!AuthenticationService.verifyLogin(user, password)) {
                 return res.sendStatus(401);
             };
 
