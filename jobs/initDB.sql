@@ -2,7 +2,7 @@
 CREATE TABLE UserAccount (
     UserAccountID SERIAL PRIMARY KEY,
     Username VARCHAR(50) UNIQUE NOT NULL,
-    Password VARCHAR(50) NOT NULL
+    Password TEXT NOT NULL
 );
 
 -- Create refresh key data

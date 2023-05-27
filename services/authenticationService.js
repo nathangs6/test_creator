@@ -1,6 +1,9 @@
-require("dotenv").config()
+require("dotenv").config();
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 const AuthenticationModel = require("../models/authenticationModel");
+
+const saltRounds = 10;
 
 class AuthenticationService {
     ACCESS_TOKEN_EXPIRY_TIME() {
@@ -9,6 +12,17 @@ class AuthenticationService {
     REFRESH_TOKEN_EXPIRY_TIME() {
         return 1 * 24 * 60 * 60;
     }
+
+    async verifyLogin(user, password) {
+        const correctPassword = await bcrypt.compare(password, user.password);
+        return correctPassword;
+    };
+
+    async hashPassword(password) {
+        const salt = await bcrypt.genSalt(saltRounds)
+        const hash = await bcrypt.hash(password, salt);
+        return hash;
+    };
 
     generateAccessToken(username) {
         const user = { username };
