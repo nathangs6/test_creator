@@ -9,5 +9,6 @@ const router = express.Router();
 // define routes
 router.post("/create", UserController.createUser);
 router.put("/changepassword", UserController.changePassword);
+router.put("/delete/:username", UserController.deleteUser);
 
 module.exports = router;

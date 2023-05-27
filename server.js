@@ -23,7 +23,7 @@ const jobRoutes = require("./routes/jobs");
 const app = express(); // create instance of express and store it in app
 
 const corsOptions = {
-    origin: "https://www.tc.nathangs.ca",
+    origin: ["https://www.tc.nathangs.ca","http://localhost:3000"],
     credentials: true
 }
 

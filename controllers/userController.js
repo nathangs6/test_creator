@@ -44,6 +44,29 @@ class UserController {
             res.sendStatus(400);
         };
     };
+
+    async deleteUser(req, res) {
+        try {
+            const username = req.params.username;
+            const password = req.body.password;
+
+
+            const user = await UserService.getUser(username);
+            if (!user) {
+                return res.sendStatus(403);
+            };
+
+            if (user.password !== password) {
+                return res.sendStatus(401);
+            };
+
+            await UserService.deleteUser(user.id);
+            return res.sendStatus(200);
+        } catch(err) {
+            console.log(err);
+            res.sendStatus(400);
+        };
+    };
 };
 
 module.exports = new UserController();
