@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import API from '../apis/api.js';
+import useAPIPrivate from '../hooks/useAPIPrivate.js'
 import useAuth from '../hooks/useAuthorization.js';
+import { SmallModal } from './modals/modal.js';
 import utilStyles from '../styles/utils.module.css';
 import buttonStyles from './buttons.module.css';
 import loginStyles from './loginStyles.module.css';
+import modalStyles from './modals/modal.module.css';
 
 function UserInfo({ username }) { 
     const { auth, setAuth } = useAuth();
@@ -68,6 +71,9 @@ function UserInfo({ username }) {
         setAuth({});
         router.push("/");
     }
+
+    const [isOpen, setOpen] = useState(false);
+
     return (
         <section className={loginStyles.container}>
             <h3 className={loginStyles.heading}>Change Password</h3>
@@ -112,9 +118,49 @@ function UserInfo({ username }) {
             </form>
             <hr className={loginStyles.containerRule}/>
             <button onClick={e => signOut(e)} className={buttonStyles.listDelete}>Sign Out</button>
+            <hr className={loginStyles.containerRule}/>
+            <button onClick={() => setOpen(true)} className={buttonStyles.listDelete}>Delete Account</button>
+            {isOpen && <DeleteUserForm setOpen={setOpen} username={username}/>}
         </section>
     );
 }
+
+function DeleteUserForm({ setOpen, username }) {
+    const router = useRouter();
+    const modalTitle = "Delete Account";
+    const [deletePassword, setDeletePassword] = useState("");
+    const [deletePasswordMsg, setDeletePasswordMsg] = useState("");
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            console.log(deletePassword);
+            const response = await API.put("/user/delete/"+username, { password: deletePassword });
+            if (response) {
+                router.push("/");
+            }
+        } catch(err) {
+            if (!err?.response) {
+                setDeletePasswordMsg("no server response");
+            } else if (err.response?.status === 401) {
+                setDeletePasswordMsg("incorrect password");
+            } else {
+                setDeletePasswordMsg("account deletion failed");
+            }
+        };
+    };
+
+    return (<SmallModal setOpen={setOpen} modalTitle={modalTitle} handleSubmit={handleSubmit} action="delete">
+        Enter your password to delete user {username}.<br/>
+        <input 
+            className={modalStyles.smallTextarea}
+            type="password" 
+            placeholder="password"
+            value={deletePassword}
+            onChange={e => setDeletePassword(e.target.value)}/>
+        <p>{ deletePasswordMsg }</p>
+    </SmallModal>);
+};
 
 
 export default UserInfo

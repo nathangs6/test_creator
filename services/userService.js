@@ -1,4 +1,8 @@
 const UserModel = require("../models/userModel.js");
+const PresetService = require("../services/presetService");
+const CollectionService = require("../services/collectionService");
+const SubCollectionService = require("../services/subCollectionService");
+const QuestionService = require("../services/questionService");
 
 class UserService {
     async getUserID(username) {
@@ -54,6 +58,14 @@ class UserService {
 
     async resetUsers(allowedUserIDs) {
         UserModel.deleteOtherUsers(allowedUserIDs);
+    };
+
+    async deleteUser(userID) {
+        UserModel.deleteUser(userID);
+        setTimeout(async () => { await PresetService.cleanPresets() }, 100);
+        setTimeout(async () => { await CollectionService.cleanCollections() }, 150);
+        setTimeout(async () => { await SubCollectionService.cleanSubCollections() }, 200);
+        setTimeout(async () => { await QuestionService.cleanQuestions() }, 250);
     };
 };
 
